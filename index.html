@@ -176,6 +176,7 @@ body {
   margin-bottom: 20px;
 }
 
+/* FIXED COVER BABY IMAGE - PROPERLY ROUND */
 .cover-baby {
   width: clamp(120px, 20vw, 150px);
   height: clamp(120px, 20vw, 150px);
@@ -185,17 +186,32 @@ body {
   margin-bottom: 20px;
   box-shadow: 0 10px 20px rgba(0,0,0,0.2);
   animation: float 4s infinite ease-in-out;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  position: relative;
 }
 
 .cover-baby img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
+}
+
+/* Make sure the image is perfectly round */
+.cover-baby::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 
 .open-invitation {
@@ -363,12 +379,14 @@ body {
   overflow: hidden;
   margin-bottom: 20px;
   animation: float 4s infinite ease-in-out;
+  position: relative;
 }
 
 #page1 .baby img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
 .rainbow {
@@ -655,14 +673,6 @@ body {
   flex: 1;
   width: 100%;
 }
-
-/* Remove all swipe and arrow indicator styles */
-.swipe-hint,
-.arrow-indicator,
-.touch-area,
-.page-turn-corner {
-  display: none !important;
-}
 </style>
 </head>
 <body>
@@ -692,7 +702,7 @@ body {
       <div class="pages-container" id="pagesContainer">
         
         <!-- PAGE 1: CHRISTENING DETAILS -->
-        <div class="page active" id="page1">
+        <div class="page" id="page1">
           <div class="page-content">
             <div class="content-fitted">
               <div class="page-icon"><i class="fas fa-church"></i></div>
@@ -880,11 +890,14 @@ const totalPages = pages.length;
 
 // Initialize
 totalPagesEl.textContent = totalPages;
-updatePageIndicator();
+currentPageEl.textContent = currentPageIndex + 1;
 
 // Hide controls initially
 controls.style.opacity = '0';
 controls.style.pointerEvents = 'none';
+
+// Initially set page 1 as active
+pages[0].classList.add('active');
 
 // Show only the active page
 function updatePageVisibility() {
@@ -894,21 +907,27 @@ function updatePageVisibility() {
       page.classList.add('active');
     }
   });
+  
+  // IMPORTANT: Call updateControls after page change
   updateControls();
   
   // Auto-fit content after page change
   setTimeout(autoFitBookSize, 100);
 }
 
-// UPDATE THIS FUNCTION - FIX FOR BUTTON ENABLING
+// FIXED: Update control buttons
 function updateControls() {
-  // Enable Prev button if NOT on first page AND book is open AND not flipping
-  // Disable Prev button only on first page (page 0)
-  prevBtn.disabled = currentPageIndex === 0 || !isBookOpen || isFlipping;
+  console.log("updateControls called", {
+    currentPage: currentPageIndex + 1,
+    isBookOpen: isBookOpen,
+    isFlipping: isFlipping
+  });
   
-  // Enable Next button if NOT on last page AND book is open AND not flipping
-  // Disable Next button only on last page (page 3 when totalPages = 4)
-  nextBtn.disabled = currentPageIndex === totalPages - 1 || !isBookOpen || isFlipping;
+  // Prev button: Disabled only on first page OR if book not open OR during flipping
+  prevBtn.disabled = (currentPageIndex === 0) || !isBookOpen || isFlipping;
+  
+  // Next button: Disabled only on last page OR if book not open OR during flipping
+  nextBtn.disabled = (currentPageIndex === totalPages - 1) || !isBookOpen || isFlipping;
   
   // Update page indicator
   currentPageEl.textContent = currentPageIndex + 1;
@@ -916,7 +935,6 @@ function updateControls() {
   // Update progress bar
   updateProgress();
   
-  // Debug logging (you can remove this after testing)
   console.log(`Page: ${currentPageIndex + 1}, Prev disabled: ${prevBtn.disabled}, Next disabled: ${nextBtn.disabled}`);
 }
 
@@ -964,6 +982,9 @@ function openBook() {
       pagesContainer.style.zIndex = '90';
       isBookOpen = true;
       isFlipping = false;
+      
+      // Make sure first page is active
+      currentPageIndex = 0;
       
       // Show first page
       updatePageVisibility();
@@ -1064,24 +1085,25 @@ function autoFitBookSize() {
   // Reset to auto first
   book.style.height = 'auto';
   bookWrapper.style.height = 'auto';
+  hardCover.style.height = 'auto';
   
   // Get content height
   const contentHeight = pageContent.scrollHeight;
   
   // Calculate needed height with padding
-  const neededHeight = contentHeight + 100; // Add padding
+  const neededHeight = contentHeight + 80; // Add padding
   
   // Set minimum and maximum heights
-  const minHeight = 350;
-  const maxHeight = 650;
+  const minHeight = 380;
+  const maxHeight = 600;
   const finalHeight = Math.max(minHeight, Math.min(neededHeight, maxHeight));
   
   // Apply the height
   book.style.height = `${finalHeight}px`;
   bookWrapper.style.height = `${finalHeight}px`;
-  
-  // Also update the hard cover height
   hardCover.style.height = `${finalHeight}px`;
+  
+  console.log(`Auto-fit: content=${contentHeight}px, final=${finalHeight}px`);
 }
 
 // Add keyboard navigation
@@ -1106,6 +1128,8 @@ document.addEventListener('keydown', e => {
 
 // Initialize
 createDecorations();
+
+// Call updateControls initially to set correct button states
 updateControls();
 
 // Auto-fit on resize
