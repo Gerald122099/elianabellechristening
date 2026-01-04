@@ -6,7 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
 <style>
 :root {
@@ -76,19 +75,6 @@ body {
   100% { transform: translateX(calc(100vw + 100px)); }
 }
 
-.star {
-  position: absolute;
-  color: var(--gold);
-  animation: twinkle 2s infinite alternate;
-  font-size: 20px;
-  text-shadow: 0 0 10px rgba(255, 217, 102, 0.7);
-}
-
-@keyframes twinkle {
-  from { opacity: 0.4; transform: scale(0.8); }
-  to { opacity: 1; transform: scale(1.2); }
-}
-
 /* ===== FLIPBOOK CONTAINER ===== */
 .book-container {
   display: flex;
@@ -134,10 +120,9 @@ body {
   width: 100%;
   height: var(--book-height);
   transform-style: preserve-3d;
-  transition: transform 0.5s ease;
 }
 
-/* HARD COVER */
+/* HARD COVER - FIXED POSITION */
 .hard-cover {
   position: absolute;
   width: 100%;
@@ -176,6 +161,7 @@ body {
 
 .hard-cover.open {
   transform: rotateY(-180deg);
+  z-index: 1; /* Lower when open */
 }
 
 .hard-cover h1 {
@@ -200,6 +186,11 @@ body {
   margin-bottom: 20px;
   box-shadow: 0 10px 20px rgba(0,0,0,0.2);
   animation: float 4s infinite ease-in-out;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 
 .cover-baby img {
@@ -227,15 +218,16 @@ body {
   box-shadow: 0 8px 20px rgba(0,0,0,0.3);
 }
 
-/* PAGES CONTAINER */
+/* PAGES CONTAINER - FIXED POSITION */
 .pages-container {
-  position: relative;
+  position: absolute;
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
+  z-index: 50; /* Below cover when closed */
 }
 
-/* PAGE STYLING */
+/* PAGE STYLING - PROPER STACKING */
 .page {
   position: absolute;
   width: 100%;
@@ -247,7 +239,7 @@ body {
     0 3px 10px var(--shadow);
   transform-origin: left center;
   transition: transform 0.8s cubic-bezier(0.42, 0, 0.58, 1);
-  padding: 25px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -255,6 +247,24 @@ body {
   overflow: hidden;
   backface-visibility: hidden;
   border: 1px solid rgba(0,0,0,0.05);
+  z-index: 10; /* Base z-index for all pages */
+}
+
+/* Initially hide all pages behind cover */
+.page {
+  display: none;
+}
+
+/* Only show active page */
+.page.active {
+  display: flex;
+  z-index: 60; /* Above other pages */
+}
+
+/* Show previous page when flipping */
+.page.previous {
+  display: flex;
+  z-index: 55; /* Below active but above others */
 }
 
 .page::before {
@@ -276,11 +286,10 @@ body {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 20px;
+  padding: 15px;
   position: relative;
   z-index: 2;
   overflow-y: auto;
-  max-height: 100%;
 }
 
 /* Custom scrollbar for page content */
@@ -352,27 +361,15 @@ body {
   opacity: 0.7;
 }
 
-/* Realistic page curl effect */
-.page.curling {
-  box-shadow: 
-    -5px 0 15px rgba(0,0,0,0.1),
-    inset 5px 0 10px rgba(0,0,0,0.05);
-}
-
 /* Individual page styling */
 #page1 .baby {
-  width: clamp(140px, 25vw, 180px);
-  height: clamp(140px, 25vw, 180px);
+  width: clamp(120px, 25vw, 160px);
+  height: clamp(120px, 25vw, 160px);
   border-radius: 50%;
   border: 6px solid var(--accent);
   overflow: hidden;
   margin-bottom: 20px;
   animation: float 4s infinite ease-in-out;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-15px); }
 }
 
 #page1 .baby img {
@@ -382,8 +379,8 @@ body {
 }
 
 .rainbow {
-  width: clamp(150px, 30vw, 200px);
-  height: clamp(75px, 15vw, 100px);
+  width: clamp(120px, 25vw, 180px);
+  height: clamp(60px, 12vw, 90px);
   border-radius: 100px 100px 0 0;
   background: linear-gradient(to bottom,
     var(--pink),
@@ -410,8 +407,8 @@ body {
 /* Page 1 - Christening Details */
 #page1 .details {
   background: rgba(196, 154, 132, 0.1);
-  padding: 20px;
-  border-radius: 15px;
+  padding: 15px;
+  border-radius: 12px;
   margin: 15px 0;
   width: 90%;
   text-align: center;
@@ -419,14 +416,14 @@ body {
 
 #page1 .location-icon {
   color: var(--accent);
-  margin-right: 10px;
+  margin-right: 8px;
 }
 
 /* Page 2 - Dress Code */
 #page2 .section-title {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   color: var(--accent);
-  margin-top: 20px;
+  margin-top: 15px;
   margin-bottom: 10px;
   font-weight: 600;
   text-align: center;
@@ -434,55 +431,56 @@ body {
 
 #page2 .section-content {
   background: rgba(196, 154, 132, 0.05);
-  padding: 15px;
+  padding: 12px;
   border-radius: 10px;
   margin: 10px 0;
   width: 90%;
-  text-align: left;
+  text-align: center;
 }
 
 #page2 .gift-section {
-  margin-top: 20px;
+  margin-top: 15px;
   text-align: center;
 }
 
 #page2 .gift-item {
   display: inline-block;
-  margin: 8px;
-  padding: 10px 15px;
+  margin: 6px;
+  padding: 8px 12px;
   background: rgba(196, 154, 132, 0.1);
   border-radius: 8px;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 /* Page 3 - Health Protocol */
 #page3 .protocol-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 15px;
+  gap: 12px;
   width: 90%;
-  margin-top: 20px;
+  margin-top: 15px;
 }
 
 #page3 .protocol-item {
   display: flex;
   align-items: center;
-  padding: 15px;
+  padding: 12px;
   background: rgba(196, 154, 132, 0.1);
   border-radius: 10px;
   text-align: left;
 }
 
 #page3 .protocol-icon {
-  font-size: 1.8rem;
-  margin-right: 15px;
+  font-size: 1.6rem;
+  margin-right: 12px;
   color: var(--accent);
-  min-width: 40px;
+  min-width: 35px;
   text-align: center;
 }
 
 #page3 .protocol-text {
   flex: 1;
+  font-size: 0.95rem;
 }
 
 /* ===== CLICKABLE ARROW INDICATORS ===== */
@@ -490,19 +488,19 @@ body {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 60px;
-  height: 60px;
-  background: rgba(196, 154, 132, 0.8);
+  width: 50px;
+  height: 50px;
+  background: rgba(196, 154, 132, 0.9);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   cursor: pointer;
-  z-index: 25;
+  z-index: 70;
   transition: all 0.3s;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
   opacity: 0;
   pointer-events: none;
 }
@@ -531,7 +529,7 @@ body {
   top: 0;
   height: 100%;
   width: 40%;
-  z-index: 20;
+  z-index: 65;
   cursor: pointer;
 }
 
@@ -550,9 +548,9 @@ body {
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 15px;
+  gap: 12px;
   z-index: 100;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
   padding: 10px 20px;
   border-radius: 50px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
@@ -568,15 +566,15 @@ body {
 }
 
 .control-btn {
-  width: 50px;
-  height: 50px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
   border: none;
   background: var(--accent);
   color: white;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   cursor: pointer;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
   transition: all 0.3s;
   display: flex;
   align-items: center;
@@ -585,15 +583,15 @@ body {
 
 @media (max-width: 480px) {
   .control-btn {
-    width: 45px;
-    height: 45px;
+    width: 40px;
+    height: 40px;
     font-size: 1rem;
   }
 }
 
 .control-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
 }
 
 .control-btn:active {
@@ -604,18 +602,18 @@ body {
   opacity: 0.4;
   cursor: not-allowed;
   transform: none;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .page-indicator {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 80px;
-  padding: 0 15px;
+  min-width: 70px;
+  padding: 0 12px;
   color: var(--text);
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 /* ===== CONFETTI ===== */
@@ -631,8 +629,8 @@ body {
 
 .confetti {
   position: absolute;
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   top: -10px;
   animation: fall linear forwards;
   border-radius: 2px;
@@ -654,22 +652,22 @@ body {
   }
   50% { 
     transform: rotateY(-90deg) scaleX(0.95);
-    box-shadow: -10px 0 30px rgba(0,0,0,0.2);
+    box-shadow: -10px 0 20px rgba(0,0,0,0.15);
   }
   100% { 
     transform: rotateY(-180deg) scaleX(1);
-    box-shadow: 5px 0 20px rgba(0,0,0,0.1);
+    box-shadow: 5px 0 15px rgba(0,0,0,0.1);
   }
 }
 
 @keyframes pageFlipBack {
   0% { 
     transform: rotateY(-180deg) scaleX(1);
-    box-shadow: 5px 0 20px rgba(0,0,0,0.1);
+    box-shadow: 5px 0 15px rgba(0,0,0,0.1);
   }
   50% { 
     transform: rotateY(-90deg) scaleX(0.95);
-    box-shadow: -10px 0 30px rgba(0,0,0,0.2);
+    box-shadow: -10px 0 20px rgba(0,0,0,0.15);
   }
   100% { 
     transform: rotateY(0) scaleX(1);
@@ -679,22 +677,12 @@ body {
 
 .page.flipping {
   animation: pageFlip 0.8s cubic-bezier(0.42, 0, 0.58, 1) forwards;
-  z-index: 20;
+  z-index: 70;
 }
 
 .page.flipping-back {
   animation: pageFlipBack 0.8s cubic-bezier(0.42, 0, 0.58, 1) forwards;
-  z-index: 20;
-}
-
-/* Cover closing animation */
-@keyframes closeCover {
-  0% { transform: rotateY(-180deg); }
-  100% { transform: rotateY(0deg); }
-}
-
-.hard-cover.closing {
-  animation: closeCover 1.2s cubic-bezier(0.645, 0.045, 0.355, 1) forwards;
+  z-index: 70;
 }
 
 /* Progress indicator */
@@ -720,15 +708,16 @@ body {
 /* Mobile swipe hint */
 .swipe-hint {
   position: absolute;
-  bottom: -40px;
+  bottom: -35px;
   left: 50%;
   transform: translateX(-50%);
   color: var(--text-light);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   opacity: 0.7;
+  white-space: nowrap;
 }
 
 .swipe-hint i {
@@ -737,12 +726,13 @@ body {
 
 @keyframes swipeHint {
   0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(10px); }
+  50% { transform: translateX(8px); }
 }
 
 @media (max-width: 768px) {
   .swipe-hint {
-    display: flex;
+    font-size: 0.8rem;
+    bottom: -30px;
   }
 }
 
@@ -752,8 +742,25 @@ body {
   z-index: 2;
 }
 
-.page {
-  overflow: hidden;
+/* Page turn corner indicator */
+.page-turn-corner {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, transparent 50%, rgba(196, 154, 132, 0.1) 50%);
+  cursor: pointer;
+  z-index: 5;
+}
+
+.page-turn-corner:hover::after {
+  content: '›';
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  color: var(--accent);
+  font-size: 1.5rem;
 }
 </style>
 </head>
@@ -766,7 +773,7 @@ body {
 <div class="book-container">
   <div class="book-wrapper">
     <div class="swipe-hint">
-      <i class="fas fa-arrow-left"></i> Swipe or click arrows to flip <i class="fas fa-arrow-right"></i>
+      <i class="fas fa-arrow-left"></i> Swipe or click arrows <i class="fas fa-arrow-right"></i>
     </div>
     
     <div class="book">
@@ -783,13 +790,12 @@ body {
         </button>
       </div>
       
-      <!-- PAGES -->
+      <!-- PAGES CONTAINER -->
       <div class="pages-container" id="pagesContainer">
         
         <!-- PAGE 1: CHRISTENING DETAILS -->
-        <div class="page" id="page1">
-          <!-- Clickable arrow indicators -->
-          <div class="arrow-indicator arrow-next" onclick="nextPage()">
+        <div class="page active" id="page1">
+          <div class="arrow-indicator arrow-next show" onclick="nextPage()">
             <i class="fas fa-chevron-right"></i>
           </div>
           
@@ -823,7 +829,6 @@ body {
         
         <!-- PAGE 2: DRESS CODE -->
         <div class="page" id="page2">
-          <!-- Clickable arrow indicators -->
           <div class="arrow-indicator arrow-prev" onclick="prevPage()">
             <i class="fas fa-chevron-left"></i>
           </div>
@@ -870,7 +875,6 @@ body {
         
         <!-- PAGE 3: HEALTH PROTOCOL -->
         <div class="page" id="page3">
-          <!-- Clickable arrow indicators -->
           <div class="arrow-indicator arrow-prev" onclick="prevPage()">
             <i class="fas fa-chevron-left"></i>
           </div>
@@ -937,7 +941,6 @@ body {
         
         <!-- PAGE 4: HOPE TO SEE YOU THERE -->
         <div class="page" id="page4">
-          <!-- Clickable arrow indicators -->
           <div class="arrow-indicator arrow-prev" onclick="prevPage()">
             <i class="fas fa-chevron-left"></i>
           </div>
@@ -949,7 +952,7 @@ body {
               <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Baby Eliana">
             </div>
             <div class="rainbow"></div>
-            <h1>Hope to see you there!</h1>
+            <h1>Thank You!</h1>
             <p>We're so excited to celebrate this special day with you</p>
             <p>Lots of love,<br><strong>Eliana Belle Marquez</strong> & Family</p>
             <div class="page-number">4</div>
@@ -964,12 +967,12 @@ body {
 
 <!-- MINIMAL CONTROLS -->
 <div class="controls" id="controls">
-  <button class="control-btn" id="prevBtn" onclick="prevPage()">
+  <button class="control-btn" id="prevBtn" onclick="prevPage()" disabled>
     <i class="fas fa-chevron-left"></i>
   </button>
   
   <div class="page-indicator">
-    <span id="currentPage">0</span> / <span id="totalPages">4</span>
+    <span id="currentPage">1</span> / <span id="totalPages">4</span>
   </div>
   
   <button class="control-btn" id="nextBtn" onclick="nextPage()">
@@ -993,37 +996,54 @@ const confettiContainer = document.getElementById('confettiContainer');
 const decorContainer = document.getElementById('decor');
 const controls = document.getElementById('controls');
 const bookWrapper = document.querySelector('.book-wrapper');
-const arrowIndicators = document.querySelectorAll('.arrow-indicator');
 
 // State
-let currentPage = 0;
+let currentPageIndex = 0;
 let isBookOpen = false;
 let isFlipping = false;
 const totalPages = pages.length;
 
 // Initialize
 totalPagesEl.textContent = totalPages;
-currentPageEl.textContent = currentPage + 1;
+updatePageIndicator();
 
 // Hide controls initially
 controls.style.opacity = '0';
 controls.style.pointerEvents = 'none';
 
+// Show only the active page
+function updatePageVisibility() {
+  pages.forEach((page, index) => {
+    page.classList.remove('active', 'previous');
+    if (index === currentPageIndex) {
+      page.classList.add('active');
+    } else if (index === currentPageIndex - 1) {
+      page.classList.add('previous');
+    }
+  });
+  updateArrowIndicators();
+}
+
 // Update arrow indicators visibility
 function updateArrowIndicators() {
-  arrowIndicators.forEach(arrow => {
+  // Remove all arrow indicators first
+  document.querySelectorAll('.arrow-indicator').forEach(arrow => {
     arrow.classList.remove('show');
   });
   
   if (isBookOpen && !isFlipping) {
+    const currentPage = pages[currentPageIndex];
+    
     // Show prev arrow if not on first page
-    if (currentPage > 0) {
-      document.querySelector('.arrow-prev')?.classList.add('show');
+    if (currentPageIndex > 0) {
+      const prevArrow = currentPage.querySelector('.arrow-prev');
+      if (prevArrow) prevArrow.classList.add('show');
     }
     
     // Show next arrow if not on last page
-    if (currentPage < totalPages - 1) {
-      document.querySelector('.arrow-next')?.classList.add('show');
+    if (currentPageIndex < totalPages - 1) {
+      const nextArrow = currentPage.querySelector('.arrow-next');
+      if (nextArrow) nextArrow.classList.add('show');
     }
   }
 }
@@ -1042,21 +1062,9 @@ function createDecorations() {
     cloud.style.animationDelay = `${Math.random() * 10}s`;
     decorContainer.appendChild(cloud);
   }
-  
-  // Create stars
-  for (let i = 0; i < 8; i++) {
-    const star = document.createElement('div');
-    star.className = 'star';
-    star.textContent = Math.random() > 0.5 ? '✦' : '✧';
-    star.style.top = `${Math.random() * 90}%`;
-    star.style.left = `${Math.random() * 100}%`;
-    star.style.fontSize = `${15 + Math.random() * 15}px`;
-    star.style.animationDelay = `${Math.random() * 2}s`;
-    decorContainer.appendChild(star);
-  }
 }
 
-// Open book function with realistic animation
+// Open book function
 function openBook() {
   if (!isBookOpen && !isFlipping) {
     isFlipping = true;
@@ -1073,15 +1081,18 @@ function openBook() {
     
     // After cover opens, show first page
     setTimeout(() => {
-      pagesContainer.style.zIndex = '11';
+      pagesContainer.style.zIndex = '90'; // Above cover when open
       isBookOpen = true;
       isFlipping = false;
       
-      // Trigger confetti
-      createConfetti(30);
+      // Show first page
+      updatePageVisibility();
       
-      // Update page indicator
-      updatePageIndicator();
+      // Trigger confetti
+      createConfetti(20);
+      
+      // Update controls
+      updateControls();
       updateArrowIndicators();
       
       // Auto-fit book size
@@ -1090,98 +1101,59 @@ function openBook() {
   }
 }
 
-// Close book function with smooth closing animation
-function closeBook() {
-  if (isBookOpen && !isFlipping) {
-    isFlipping = true;
-    
-    // Hide controls
-    controls.style.opacity = '0';
-    controls.style.pointerEvents = 'none';
-    
-    // Hide arrow indicators
-    updateArrowIndicators();
-    
-    // Reset all pages to initial state
-    pages.forEach(page => {
-      page.style.transform = 'rotateY(0deg)';
-      page.classList.remove('flipping', 'flipping-back');
-    });
-    
-    // Reset current page
-    currentPage = 0;
-    updatePageIndicator();
-    updateControls();
-    updateProgress();
-    
-    // Close the cover with animation
-    hardCover.classList.remove('open');
-    hardCover.classList.add('closing');
-    
-    setTimeout(() => {
-      hardCover.classList.remove('closing');
-      pagesContainer.style.zIndex = '1';
-      isBookOpen = false;
-      isFlipping = false;
-    }, 1200);
-  }
-}
-
-// Page navigation with realistic flip animation
+// Page navigation
 function nextPage() {
-  if (currentPage < totalPages - 1 && !isFlipping && isBookOpen) {
+  if (currentPageIndex < totalPages - 1 && !isFlipping && isBookOpen) {
     isFlipping = true;
+    const currentPage = pages[currentPageIndex];
     
-    // Hide arrow indicators during flip
-    updateArrowIndicators();
+    // Add flipping animation
+    currentPage.classList.add('flipping');
     
-    // Add flipping animation to current page
-    pages[currentPage].classList.add('flipping');
-    
-    // Update page after animation
+    // Update after animation
     setTimeout(() => {
-      pages[currentPage].style.transform = 'rotateY(-180deg)';
-      pages[currentPage].classList.remove('flipping');
-      currentPage++;
+      currentPage.classList.remove('flipping', 'active');
+      currentPageIndex++;
+      
+      // Show new page
+      updatePageVisibility();
       
       // Update controls and progress
       updateControls();
       updateProgress();
       updatePageIndicator();
-      updateArrowIndicators();
       
       isFlipping = false;
       
       // Trigger confetti on last page
-      if (currentPage === totalPages - 1) {
-        setTimeout(() => createConfetti(100), 300);
+      if (currentPageIndex === totalPages - 1) {
+        setTimeout(() => createConfetti(80), 300);
       }
     }, 800);
   }
 }
 
 function prevPage() {
-  if (currentPage > 0 && !isFlipping && isBookOpen) {
+  if (currentPageIndex > 0 && !isFlipping && isBookOpen) {
     isFlipping = true;
     
-    // Hide arrow indicators during flip
-    updateArrowIndicators();
+    // Show previous page first
+    currentPageIndex--;
+    updatePageVisibility();
     
-    currentPage--;
+    const currentPage = pages[currentPageIndex];
     
-    // Add flipping back animation to previous page
-    pages[currentPage].classList.add('flipping-back');
+    // Add flipping back animation
+    currentPage.classList.add('flipping-back');
     
-    // Update page after animation
+    // Update after animation
     setTimeout(() => {
-      pages[currentPage].style.transform = 'rotateY(0deg)';
-      pages[currentPage].classList.remove('flipping-back');
+      currentPage.classList.remove('flipping-back');
       
       // Update controls and progress
       updateControls();
       updateProgress();
       updatePageIndicator();
-      updateArrowIndicators();
       
       isFlipping = false;
     }, 800);
@@ -1190,13 +1162,13 @@ function prevPage() {
 
 // Update control buttons
 function updateControls() {
-  prevBtn.disabled = currentPage === 0 || !isBookOpen || isFlipping;
-  nextBtn.disabled = currentPage === totalPages - 1 || !isBookOpen || isFlipping;
+  prevBtn.disabled = currentPageIndex === 0 || !isBookOpen || isFlipping;
+  nextBtn.disabled = currentPageIndex === totalPages - 1 || !isBookOpen || isFlipping;
 }
 
 // Update progress bar
 function updateProgress() {
-  const progress = ((currentPage + 1) / totalPages) * 100;
+  const progress = ((currentPageIndex + 1) / totalPages) * 100;
   document.querySelectorAll('.progress-fill').forEach(fill => {
     fill.style.width = `${progress}%`;
   });
@@ -1204,10 +1176,10 @@ function updateProgress() {
 
 // Update page indicator
 function updatePageIndicator() {
-  currentPageEl.textContent = currentPage + 1;
+  currentPageEl.textContent = currentPageIndex + 1;
 }
 
-// Create confetti with realistic physics
+// Create confetti
 function createConfetti(count) {
   for (let i = 0; i < count; i++) {
     const confetti = document.createElement('div');
@@ -1220,12 +1192,8 @@ function createConfetti(count) {
     // Random shape
     if (Math.random() > 0.7) {
       confetti.style.borderRadius = '50%';
-      confetti.style.width = '10px';
-      confetti.style.height = '10px';
-    } else if (Math.random() > 0.5) {
-      confetti.style.width = '15px';
-      confetti.style.height = '5px';
-      confetti.style.borderRadius = '2px';
+      confetti.style.width = '8px';
+      confetti.style.height = '8px';
     }
     
     confettiContainer.appendChild(confetti);
@@ -1241,73 +1209,54 @@ function createConfetti(count) {
 
 // Auto-fit book size based on content
 function autoFitBookSize() {
-  const book = document.querySelector('.book');
-  const pagesContent = document.querySelectorAll('.page-content');
+  const pageContents = document.querySelectorAll('.page-content');
   let maxHeight = 0;
   
   // Calculate maximum content height
-  pagesContent.forEach(content => {
-    content.style.height = 'auto';
+  pageContents.forEach(content => {
     const height = content.scrollHeight;
     if (height > maxHeight) maxHeight = height;
-    content.style.height = '100%';
   });
   
   // Add padding and adjust book height
-  const newHeight = Math.min(Math.max(maxHeight + 80, 350), 600);
+  const newHeight = Math.min(Math.max(maxHeight + 60, 320), 550);
   document.documentElement.style.setProperty('--book-height', `${newHeight}px`);
   
   // Update container
   bookWrapper.style.minHeight = `${newHeight}px`;
-  
-  // Ensure content fits without overlay
-  pagesContent.forEach(content => {
-    content.style.overflowY = maxHeight > newHeight - 80 ? 'auto' : 'hidden';
-  });
 }
 
-// Add touch/swipe support for mobile with better detection
+// Add touch/swipe support
 let touchStartX = 0;
 let touchStartY = 0;
-let touchEndX = 0;
-let touchEndY = 0;
 
 bookWrapper.addEventListener('touchstart', e => {
   if (!isBookOpen || isFlipping) return;
   
-  touchStartX = e.changedTouches[0].screenX;
-  touchStartY = e.changedTouches[0].screenY;
-  e.preventDefault();
-}, { passive: false });
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+});
 
 bookWrapper.addEventListener('touchend', e => {
   if (!isBookOpen || isFlipping) return;
   
-  touchEndX = e.changedTouches[0].screenX;
-  touchEndY = e.changedTouches[0].screenY;
-  handleSwipe();
-  e.preventDefault();
-}, { passive: false });
-
-function handleSwipe() {
-  const swipeThreshold = 50;
-  const verticalThreshold = 30;
+  const touchEndX = e.changedTouches[0].clientX;
+  const touchEndY = e.changedTouches[0].clientY;
   
-  // Calculate swipe distance
   const diffX = touchEndX - touchStartX;
   const diffY = Math.abs(touchEndY - touchStartY);
   
-  // Only process horizontal swipes with minimal vertical movement
-  if (diffY < verticalThreshold) {
-    if (diffX < -swipeThreshold) {
+  // Only process horizontal swipes
+  if (Math.abs(diffX) > 50 && diffY < 30) {
+    if (diffX < 0) {
       // Swipe left - next page
       nextPage();
-    } else if (diffX > swipeThreshold) {
+    } else {
       // Swipe right - previous page
       prevPage();
     }
   }
-}
+});
 
 // Add click handlers for touch areas
 document.querySelectorAll('.touch-area.next').forEach(area => {
@@ -1315,7 +1264,6 @@ document.querySelectorAll('.touch-area.next').forEach(area => {
     if (isBookOpen && !isFlipping) {
       nextPage();
     }
-    e.stopPropagation();
   });
 });
 
@@ -1324,7 +1272,6 @@ document.querySelectorAll('.touch-area.prev').forEach(area => {
     if (isBookOpen && !isFlipping) {
       prevPage();
     }
-    e.stopPropagation();
   });
 });
 
@@ -1348,51 +1295,21 @@ document.addEventListener('keydown', e => {
   }
   
   if (e.key === 'Escape') {
-    closeBook();
+    // Optional: add close book on escape
   }
-});
-
-// Add double-tap to close on last page
-let lastTap = 0;
-bookWrapper.addEventListener('touchend', (e) => {
-  if (!isBookOpen || isFlipping) return;
-  
-  const currentTime = new Date().getTime();
-  const tapLength = currentTime - lastTap;
-  
-  if (tapLength < 300 && tapLength > 0) {
-    // Double tap detected
-    if (currentPage === totalPages - 1) {
-      closeBook();
-    }
-  }
-  
-  lastTap = currentTime;
 });
 
 // Initialize
 createDecorations();
 updateControls();
 updateProgress();
-updateArrowIndicators();
+updatePageVisibility();
 
-// Auto-fit on resize and load
+// Auto-fit on resize
 window.addEventListener('resize', autoFitBookSize);
 window.addEventListener('load', () => {
-  setTimeout(autoFitBookSize, 500);
-});
-
-// Ensure proper content display after page flip
-pages.forEach(page => {
-  const observer = new ResizeObserver(() => {
-    if (isBookOpen) {
-      autoFitBookSize();
-    }
-  });
-  
-  observer.observe(page);
+  setTimeout(autoFitBookSize, 100);
 });
 </script>
 </body>
 </html>
-
