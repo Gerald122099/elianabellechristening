@@ -21,7 +21,7 @@
   --pink: #f6c1cc;
   --blue: #c6ddf5;
   --book-width: 800px;
-  --book-height: 500px;
+  --book-height: auto;
 }
 
 * {
@@ -38,7 +38,6 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   position: relative;
-  touch-action: pan-y pinch-zoom;
 }
 
 /* ===== DECOR ===== */
@@ -78,6 +77,7 @@ body {
 /* ===== FLIPBOOK CONTAINER ===== */
 .book-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
@@ -87,30 +87,28 @@ body {
 .book-wrapper {
   width: 90%;
   max-width: var(--book-width);
-  height: auto;
-  min-height: var(--book-height);
+  min-height: 400px;
   position: relative;
   perspective: 2000px;
   margin: 20px auto;
   -webkit-tap-highlight-color: transparent;
+  flex: 1;
 }
 
 @media (max-width: 768px) {
   :root {
     --book-width: 95vw;
-    --book-height: 400px;
   }
   .book-wrapper {
     width: 95%;
+    min-height: 350px;
   }
 }
 
 @media (max-width: 480px) {
-  :root {
-    --book-height: 350px;
-  }
   .book-wrapper {
     width: 98%;
+    min-height: 300px;
   }
 }
 
@@ -118,7 +116,8 @@ body {
 .book {
   position: relative;
   width: 100%;
-  height: var(--book-height);
+  height: auto;
+  min-height: 400px;
   transform-style: preserve-3d;
 }
 
@@ -239,7 +238,7 @@ body {
     0 3px 10px var(--shadow);
   transform-origin: left center;
   transition: transform 0.8s cubic-bezier(0.42, 0, 0.58, 1);
-  padding: 20px;
+  padding: 25px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -261,12 +260,6 @@ body {
   z-index: 60; /* Above other pages */
 }
 
-/* Show previous page when flipping */
-.page.previous {
-  display: flex;
-  z-index: 55; /* Below active but above others */
-}
-
 .page::before {
   content: '';
   position: absolute;
@@ -286,7 +279,7 @@ body {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 15px;
+  padding: 20px;
   position: relative;
   z-index: 2;
   overflow-y: auto;
@@ -407,8 +400,8 @@ body {
 /* Page 1 - Christening Details */
 #page1 .details {
   background: rgba(196, 154, 132, 0.1);
-  padding: 15px;
-  border-radius: 12px;
+  padding: 20px;
+  border-radius: 15px;
   margin: 15px 0;
   width: 90%;
   text-align: center;
@@ -416,12 +409,12 @@ body {
 
 #page1 .location-icon {
   color: var(--accent);
-  margin-right: 8px;
+  margin-right: 10px;
 }
 
 /* Page 2 - Dress Code */
 #page2 .section-title {
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   color: var(--accent);
   margin-top: 15px;
   margin-bottom: 10px;
@@ -431,122 +424,56 @@ body {
 
 #page2 .section-content {
   background: rgba(196, 154, 132, 0.05);
-  padding: 12px;
-  border-radius: 10px;
-  margin: 10px 0;
+  padding: 15px;
+  border-radius: 12px;
+  margin: 12px 0;
   width: 90%;
   text-align: center;
 }
 
 #page2 .gift-section {
-  margin-top: 15px;
+  margin-top: 20px;
   text-align: center;
 }
 
 #page2 .gift-item {
   display: inline-block;
-  margin: 6px;
-  padding: 8px 12px;
+  margin: 8px;
+  padding: 10px 15px;
   background: rgba(196, 154, 132, 0.1);
-  border-radius: 8px;
-  font-size: 0.9rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
 }
 
 /* Page 3 - Health Protocol */
 #page3 .protocol-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 12px;
+  gap: 15px;
   width: 90%;
-  margin-top: 15px;
+  margin-top: 20px;
 }
 
 #page3 .protocol-item {
   display: flex;
   align-items: center;
-  padding: 12px;
+  padding: 15px;
   background: rgba(196, 154, 132, 0.1);
-  border-radius: 10px;
+  border-radius: 12px;
   text-align: left;
 }
 
 #page3 .protocol-icon {
-  font-size: 1.6rem;
-  margin-right: 12px;
+  font-size: 1.8rem;
+  margin-right: 15px;
   color: var(--accent);
-  min-width: 35px;
+  min-width: 40px;
   text-align: center;
 }
 
 #page3 .protocol-text {
   flex: 1;
-  font-size: 0.95rem;
-}
-
-/* ===== ARROW INDICATORS ===== */
-.arrow-indicator {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 50px;
-  height: 50px;
-  background: rgba(196, 154, 132, 0.9);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 1.3rem;
-  cursor: pointer;
-  z-index: 70;
-  transition: all 0.3s;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* Show arrows when book is open */
-.page.active .arrow-indicator {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* Hide arrows during flip animation */
-.page.flipping .arrow-indicator,
-.page.flipping-back .arrow-indicator {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.arrow-indicator:hover {
-  background: var(--accent);
-  transform: translateY(-50%) scale(1.1);
-}
-
-.arrow-prev {
-  left: 10px;
-}
-
-.arrow-next {
-  right: 10px;
-}
-
-/* Touch areas for mobile */
-.touch-area {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  width: 40%;
-  z-index: 65;
-  cursor: pointer;
-}
-
-.touch-area.prev {
-  left: 0;
-}
-
-.touch-area.next {
-  right: 0;
+  font-size: 1rem;
 }
 
 /* ===== MINIMAL CONTROLS ===== */
@@ -556,10 +483,10 @@ body {
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 12px;
+  gap: 15px;
   z-index: 100;
   background: rgba(255, 255, 255, 0.95);
-  padding: 10px 20px;
+  padding: 12px 25px;
   border-radius: 50px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(5px);
@@ -568,21 +495,21 @@ body {
 @media (max-width: 768px) {
   .controls {
     bottom: 15px;
-    padding: 8px 15px;
-    gap: 10px;
+    padding: 10px 20px;
+    gap: 12px;
   }
 }
 
 .control-btn {
-  width: 45px;
-  height: 45px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   border: none;
   background: var(--accent);
   color: white;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   cursor: pointer;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   transition: all 0.3s;
   display: flex;
   align-items: center;
@@ -591,15 +518,15 @@ body {
 
 @media (max-width: 480px) {
   .control-btn {
-    width: 40px;
-    height: 40px;
-    font-size: 1rem;
+    width: 45px;
+    height: 45px;
+    font-size: 1.1rem;
   }
 }
 
 .control-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.25);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
 }
 
 .control-btn:active {
@@ -610,18 +537,18 @@ body {
   opacity: 0.4;
   cursor: not-allowed;
   transform: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
 }
 
 .page-indicator {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 70px;
-  padding: 0 12px;
+  min-width: 80px;
+  padding: 0 15px;
   color: var(--text);
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 1.1rem;
 }
 
 /* ===== CONFETTI ===== */
@@ -713,62 +640,28 @@ body {
   transition: width 0.5s cubic-bezier(0.42, 0, 0.58, 1);
 }
 
-/* Mobile swipe hint */
-.swipe-hint {
-  position: absolute;
-  bottom: -35px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: var(--text-light);
-  font-size: 0.85rem;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  opacity: 0.7;
-  white-space: nowrap;
-}
-
-.swipe-hint i {
-  animation: swipeHint 2s infinite;
-}
-
-@keyframes swipeHint {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(8px); }
-}
-
-@media (max-width: 768px) {
-  .swipe-hint {
-    font-size: 0.8rem;
-    bottom: -30px;
-  }
-}
-
 /* Ensure content doesn't overlay */
 .page-content > * {
   position: relative;
   z-index: 2;
 }
 
-/* Page turn corner indicator */
-.page-turn-corner {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 40px;
-  height: 40px;
-  background: linear-gradient(135deg, transparent 50%, rgba(196, 154, 132, 0.1) 50%);
-  cursor: pointer;
-  z-index: 5;
+/* Content fit adjustment */
+.content-fitted {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  width: 100%;
 }
 
-.page-turn-corner:hover::after {
-  content: '›';
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  color: var(--accent);
-  font-size: 1.5rem;
+/* Remove all swipe and arrow indicator styles */
+.swipe-hint,
+.arrow-indicator,
+.touch-area,
+.page-turn-corner {
+  display: none !important;
 }
 </style>
 </head>
@@ -780,9 +673,6 @@ body {
 <!-- FLIPBOOK -->
 <div class="book-container">
   <div class="book-wrapper">
-    <div class="swipe-hint">
-      <i class="fas fa-arrow-left"></i> Swipe or click arrows <i class="fas fa-arrow-right"></i>
-    </div>
     
     <div class="book">
       <!-- HARD COVER -->
@@ -803,33 +693,29 @@ body {
         
         <!-- PAGE 1: CHRISTENING DETAILS -->
         <div class="page active" id="page1">
-          <div class="arrow-indicator arrow-next">
-            <i class="fas fa-chevron-right"></i>
-          </div>
-          
-          <div class="touch-area next"></div>
-          
           <div class="page-content">
-            <div class="page-icon"><i class="fas fa-church"></i></div>
-            <h1>Christening</h1>
-            <h2>Eliana Belle Marquez</h2>
-            
-            <div class="details">
-              <p><strong>January 31, 2026<br>11:00 AM</strong></p>
-              <p style="margin-top: 15px;">
-                <i class="fas fa-map-marker-alt location-icon"></i>
-                St. Joseph the Patriarch Parish<br>
-                Pope John Paul Ave., Mabolo, Cebu City
-              </p>
-              <p style="margin-top: 15px;">
-                <i class="fas fa-utensils location-icon"></i>
-                Reception:<br>
-                Frosting Adventure Cafe<br>
-                Andoks Bldg., Mabolo
-              </p>
+            <div class="content-fitted">
+              <div class="page-icon"><i class="fas fa-church"></i></div>
+              <h1>Christening</h1>
+              <h2>Eliana Belle Marquez</h2>
+              
+              <div class="details">
+                <p><strong>January 31, 2026<br>11:00 AM</strong></p>
+                <p style="margin-top: 15px;">
+                  <i class="fas fa-map-marker-alt location-icon"></i>
+                  St. Joseph the Patriarch Parish<br>
+                  Pope John Paul Ave., Mabolo, Cebu City
+                </p>
+                <p style="margin-top: 15px;">
+                  <i class="fas fa-utensils location-icon"></i>
+                  Reception:<br>
+                  Frosting Adventure Cafe<br>
+                  Andoks Bldg., Mabolo
+                </p>
+              </div>
+              
+              <p style="margin-top: 15px; font-style: italic;">We can't wait to celebrate with you!</p>
             </div>
-            
-            <p style="margin-top: 15px; font-style: italic;">We can't wait to celebrate with you!</p>
             <div class="page-number">1</div>
           </div>
           <div class="flip-progress"><div class="progress-fill"></div></div>
@@ -837,44 +723,36 @@ body {
         
         <!-- PAGE 2: DRESS CODE -->
         <div class="page" id="page2">
-          <div class="arrow-indicator arrow-prev">
-            <i class="fas fa-chevron-left"></i>
-          </div>
-          <div class="arrow-indicator arrow-next">
-            <i class="fas fa-chevron-right"></i>
-          </div>
-          
-          <div class="touch-area prev"></div>
-          <div class="touch-area next"></div>
-          
           <div class="page-content">
-            <div class="page-icon"><i class="fas fa-tshirt"></i></div>
-            <h1>Dress Code</h1>
-            
-            <div class="section-content">
-              <h2 class="section-title">FOR GUESTS</h2>
-              <p>You may wear casual attire, neutral colors will do.</p>
-            </div>
-            
-            <div class="section-content">
-              <h2 class="section-title">FOR GODPARENTS</h2>
-              <p>Wear white casual attire</p>
-            </div>
-            
-            <div class="gift-section">
-              <h2 class="section-title">Gift Ideas</h2>
-              <p>Your prayers and presence are highly appreciated, but if you wish to spoil Eliana, here are the things you might consider:</p>
+            <div class="content-fitted">
+              <div class="page-icon"><i class="fas fa-tshirt"></i></div>
+              <h1>Dress Code</h1>
               
-              <div style="margin: 15px 0;">
-                <div class="gift-item">0-6 Month Baby Clothes</div>
-                <div class="gift-item">Large Size Diapers</div>
-                <div class="gift-item">Montessori Toys</div>
-                <div class="gift-item">Monetary Gift for Savings</div>
+              <div class="section-content">
+                <h2 class="section-title">FOR GUESTS</h2>
+                <p>You may wear casual attire, neutral colors will do.</p>
               </div>
               
-              <p style="font-style: italic; margin-top: 15px; font-size: 0.9rem;">
-                Just because we gave ideas doesn't mean you are obligated to give. Your presence is the most precious gift you can give.
-              </p>
+              <div class="section-content">
+                <h2 class="section-title">FOR GODPARENTS</h2>
+                <p>Wear white casual attire</p>
+              </div>
+              
+              <div class="gift-section">
+                <h2 class="section-title">Gift Ideas</h2>
+                <p>Your prayers and presence are highly appreciated, but if you wish to spoil Eliana, here are the things you might consider:</p>
+                
+                <div style="margin: 15px 0;">
+                  <div class="gift-item">0-6 Month Baby Clothes</div>
+                  <div class="gift-item">Large Size Diapers</div>
+                  <div class="gift-item">Montessori Toys</div>
+                  <div class="gift-item">Monetary Gift for Savings</div>
+                </div>
+                
+                <p style="font-style: italic; margin-top: 15px; font-size: 0.9rem;">
+                  Just because we gave ideas doesn't mean you are obligated to give. Your presence is the most precious gift you can give.
+                </p>
+              </div>
             </div>
             <div class="page-number">2</div>
           </div>
@@ -883,65 +761,57 @@ body {
         
         <!-- PAGE 3: HEALTH PROTOCOL -->
         <div class="page" id="page3">
-          <div class="arrow-indicator arrow-prev">
-            <i class="fas fa-chevron-left"></i>
-          </div>
-          <div class="arrow-indicator arrow-next">
-            <i class="fas fa-chevron-right"></i>
-          </div>
-          
-          <div class="touch-area prev"></div>
-          <div class="touch-area next"></div>
-          
           <div class="page-content">
-            <div class="page-icon"><i class="fas fa-shield-alt"></i></div>
-            <h1>Health Protocol</h1>
-            
-            <div class="protocol-grid">
-              <div class="protocol-item">
-                <div class="protocol-icon">🧴</div>
-                <div class="protocol-text">
-                  <strong>Sanitize Hands</strong><br>
-                  Please use hand sanitizer upon arrival
+            <div class="content-fitted">
+              <div class="page-icon"><i class="fas fa-shield-alt"></i></div>
+              <h1>Health Protocol</h1>
+              
+              <div class="protocol-grid">
+                <div class="protocol-item">
+                  <div class="protocol-icon">🧴</div>
+                  <div class="protocol-text">
+                    <strong>Sanitize Hands</strong><br>
+                    Please use hand sanitizer upon arrival
+                  </div>
+                </div>
+                
+                <div class="protocol-item">
+                  <div class="protocol-icon">😷</div>
+                  <div class="protocol-text">
+                    <strong>Wear Mask if Needed</strong><br>
+                    Masks are optional but recommended
+                  </div>
+                </div>
+                
+                <div class="protocol-item">
+                  <div class="protocol-icon">🚫</div>
+                  <div class="protocol-text">
+                    <strong>No Kissing the Baby</strong><br>
+                    For the safety of our little one
+                  </div>
+                </div>
+                
+                <div class="protocol-item">
+                  <div class="protocol-icon">⏰</div>
+                  <div class="protocol-text">
+                    <strong>Godparents Arrival</strong><br>
+                    Please arrive at the church earlier than the given time
+                  </div>
+                </div>
+                
+                <div class="protocol-item">
+                  <div class="protocol-icon">👕</div>
+                  <div class="protocol-text">
+                    <strong>Godparents Attire</strong><br>
+                    Please wear white casual attire as requested
+                  </div>
                 </div>
               </div>
               
-              <div class="protocol-item">
-                <div class="protocol-icon">😷</div>
-                <div class="protocol-text">
-                  <strong>Wear Mask if Needed</strong><br>
-                  Masks are optional but recommended
-                </div>
-              </div>
-              
-              <div class="protocol-item">
-                <div class="protocol-icon">🚫</div>
-                <div class="protocol-text">
-                  <strong>No Kissing the Baby</strong><br>
-                  For the safety of our little one
-                </div>
-              </div>
-              
-              <div class="protocol-item">
-                <div class="protocol-icon">⏰</div>
-                <div class="protocol-text">
-                  <strong>Godparents Arrival</strong><br>
-                  Please arrive at the church earlier than the given time
-                </div>
-              </div>
-              
-              <div class="protocol-item">
-                <div class="protocol-icon">👕</div>
-                <div class="protocol-text">
-                  <strong>Godparents Attire</strong><br>
-                  Please wear white casual attire as requested
-                </div>
-              </div>
+              <p style="margin-top: 20px; font-size: 0.9rem; font-style: italic;">
+                Your cooperation ensures a safe and joyful celebration for everyone.
+              </p>
             </div>
-            
-            <p style="margin-top: 20px; font-size: 0.9rem; font-style: italic;">
-              Your cooperation ensures a safe and joyful celebration for everyone.
-            </p>
             <div class="page-number">3</div>
           </div>
           <div class="flip-progress"><div class="progress-fill"></div></div>
@@ -949,20 +819,16 @@ body {
         
         <!-- PAGE 4: HOPE TO SEE YOU THERE -->
         <div class="page" id="page4">
-          <div class="arrow-indicator arrow-prev">
-            <i class="fas fa-chevron-left"></i>
-          </div>
-          
-          <div class="touch-area prev"></div>
-          
           <div class="page-content">
-            <div class="baby">
-              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Baby Eliana">
+            <div class="content-fitted">
+              <div class="baby">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Baby Eliana">
+              </div>
+              <div class="rainbow"></div>
+              <h1>Thank You!</h1>
+              <p>We're so excited to celebrate this special day with you</p>
+              <p>Lots of love,<br><strong>Eliana Belle Marquez</strong> & Family</p>
             </div>
-            <div class="rainbow"></div>
-            <h1>Thank You!</h1>
-            <p>We're so excited to celebrate this special day with you</p>
-            <p>Lots of love,<br><strong>Eliana Belle Marquez</strong> & Family</p>
             <div class="page-number">4</div>
           </div>
           <div class="flip-progress"><div class="progress-fill"></div></div>
@@ -1004,6 +870,7 @@ const confettiContainer = document.getElementById('confettiContainer');
 const decorContainer = document.getElementById('decor');
 const controls = document.getElementById('controls');
 const bookWrapper = document.querySelector('.book-wrapper');
+const book = document.querySelector('.book');
 
 // State
 let currentPageIndex = 0;
@@ -1022,12 +889,15 @@ controls.style.pointerEvents = 'none';
 // Show only the active page
 function updatePageVisibility() {
   pages.forEach((page, index) => {
-    page.classList.remove('active', 'previous');
+    page.classList.remove('active');
     if (index === currentPageIndex) {
       page.classList.add('active');
     }
   });
   updateControls();
+  
+  // Auto-fit content after page change
+  setTimeout(autoFitBookSize, 100);
 }
 
 // Update control buttons
@@ -1178,73 +1048,34 @@ function createConfetti(count) {
 
 // Auto-fit book size based on content
 function autoFitBookSize() {
-  const pageContents = document.querySelectorAll('.page-content');
-  let maxHeight = 0;
+  const activePage = pages[currentPageIndex];
+  if (!activePage) return;
   
-  // Calculate maximum content height
-  pageContents.forEach(content => {
-    const height = content.scrollHeight;
-    if (height > maxHeight) maxHeight = height;
-  });
+  const pageContent = activePage.querySelector('.page-content');
+  if (!pageContent) return;
   
-  // Add padding and adjust book height
-  const newHeight = Math.min(Math.max(maxHeight + 60, 320), 550);
-  document.documentElement.style.setProperty('--book-height', `${newHeight}px`);
+  // Reset to auto first
+  book.style.height = 'auto';
+  bookWrapper.style.height = 'auto';
   
-  // Update container
-  bookWrapper.style.minHeight = `${newHeight}px`;
+  // Get content height
+  const contentHeight = pageContent.scrollHeight;
+  
+  // Calculate needed height with padding
+  const neededHeight = contentHeight + 100; // Add padding
+  
+  // Set minimum and maximum heights
+  const minHeight = 350;
+  const maxHeight = 650;
+  const finalHeight = Math.max(minHeight, Math.min(neededHeight, maxHeight));
+  
+  // Apply the height
+  book.style.height = `${finalHeight}px`;
+  bookWrapper.style.height = `${finalHeight}px`;
+  
+  // Also update the hard cover height
+  hardCover.style.height = `${finalHeight}px`;
 }
-
-// Add touch/swipe support
-let touchStartX = 0;
-let touchStartY = 0;
-
-bookWrapper.addEventListener('touchstart', e => {
-  if (!isBookOpen || isFlipping) return;
-  
-  touchStartX = e.touches[0].clientX;
-  touchStartY = e.touches[0].clientY;
-});
-
-bookWrapper.addEventListener('touchend', e => {
-  if (!isBookOpen || isFlipping) return;
-  
-  const touchEndX = e.changedTouches[0].clientX;
-  const touchEndY = e.changedTouches[0].clientY;
-  
-  const diffX = touchEndX - touchStartX;
-  const diffY = Math.abs(touchEndY - touchStartY);
-  
-  // Only process horizontal swipes
-  if (Math.abs(diffX) > 50 && diffY < 30) {
-    if (diffX < 0) {
-      // Swipe left - next page
-      nextPage();
-    } else {
-      // Swipe right - previous page
-      prevPage();
-    }
-  }
-});
-
-// Add click handlers for touch areas and arrow indicators
-document.querySelectorAll('.touch-area.next, .arrow-next').forEach(area => {
-  area.addEventListener('click', (e) => {
-    if (isBookOpen && !isFlipping) {
-      nextPage();
-      e.stopPropagation();
-    }
-  });
-});
-
-document.querySelectorAll('.touch-area.prev, .arrow-prev').forEach(area => {
-  area.addEventListener('click', (e) => {
-    if (isBookOpen && !isFlipping) {
-      prevPage();
-      e.stopPropagation();
-    }
-  });
-});
 
 // Add keyboard navigation
 document.addEventListener('keydown', e => {
@@ -1274,6 +1105,11 @@ updateControls();
 window.addEventListener('resize', autoFitBookSize);
 window.addEventListener('load', () => {
   setTimeout(autoFitBookSize, 100);
+});
+
+// Also fit on orientation change
+window.addEventListener('orientationchange', () => {
+  setTimeout(autoFitBookSize, 300);
 });
 </script>
 </body>
