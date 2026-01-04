@@ -483,7 +483,7 @@ body {
   font-size: 0.95rem;
 }
 
-/* ===== CLICKABLE ARROW INDICATORS ===== */
+/* ===== ARROW INDICATORS ===== */
 .arrow-indicator {
   position: absolute;
   top: 50%;
@@ -505,9 +505,17 @@ body {
   pointer-events: none;
 }
 
-.arrow-indicator.show {
+/* Show arrows when book is open */
+.page.active .arrow-indicator {
   opacity: 1;
   pointer-events: auto;
+}
+
+/* Hide arrows during flip animation */
+.page.flipping .arrow-indicator,
+.page.flipping-back .arrow-indicator {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .arrow-indicator:hover {
@@ -795,7 +803,7 @@ body {
         
         <!-- PAGE 1: CHRISTENING DETAILS -->
         <div class="page active" id="page1">
-          <div class="arrow-indicator arrow-next show" onclick="nextPage()">
+          <div class="arrow-indicator arrow-next">
             <i class="fas fa-chevron-right"></i>
           </div>
           
@@ -829,10 +837,10 @@ body {
         
         <!-- PAGE 2: DRESS CODE -->
         <div class="page" id="page2">
-          <div class="arrow-indicator arrow-prev" onclick="prevPage()">
+          <div class="arrow-indicator arrow-prev">
             <i class="fas fa-chevron-left"></i>
           </div>
-          <div class="arrow-indicator arrow-next" onclick="nextPage()">
+          <div class="arrow-indicator arrow-next">
             <i class="fas fa-chevron-right"></i>
           </div>
           
@@ -875,10 +883,10 @@ body {
         
         <!-- PAGE 3: HEALTH PROTOCOL -->
         <div class="page" id="page3">
-          <div class="arrow-indicator arrow-prev" onclick="prevPage()">
+          <div class="arrow-indicator arrow-prev">
             <i class="fas fa-chevron-left"></i>
           </div>
-          <div class="arrow-indicator arrow-next" onclick="nextPage()">
+          <div class="arrow-indicator arrow-next">
             <i class="fas fa-chevron-right"></i>
           </div>
           
@@ -941,7 +949,7 @@ body {
         
         <!-- PAGE 4: HOPE TO SEE YOU THERE -->
         <div class="page" id="page4">
-          <div class="arrow-indicator arrow-prev" onclick="prevPage()">
+          <div class="arrow-indicator arrow-prev">
             <i class="fas fa-chevron-left"></i>
           </div>
           
@@ -1017,35 +1025,30 @@ function updatePageVisibility() {
     page.classList.remove('active', 'previous');
     if (index === currentPageIndex) {
       page.classList.add('active');
-    } else if (index === currentPageIndex - 1) {
-      page.classList.add('previous');
     }
   });
-  updateArrowIndicators();
+  updateControls();
 }
 
-// Update arrow indicators visibility
-function updateArrowIndicators() {
-  // Remove all arrow indicators first
-  document.querySelectorAll('.arrow-indicator').forEach(arrow => {
-    arrow.classList.remove('show');
-  });
+// Update control buttons
+function updateControls() {
+  // Bottom navigation buttons
+  prevBtn.disabled = currentPageIndex === 0 || !isBookOpen || isFlipping;
+  nextBtn.disabled = currentPageIndex === totalPages - 1 || !isBookOpen || isFlipping;
   
-  if (isBookOpen && !isFlipping) {
-    const currentPage = pages[currentPageIndex];
-    
-    // Show prev arrow if not on first page
-    if (currentPageIndex > 0) {
-      const prevArrow = currentPage.querySelector('.arrow-prev');
-      if (prevArrow) prevArrow.classList.add('show');
-    }
-    
-    // Show next arrow if not on last page
-    if (currentPageIndex < totalPages - 1) {
-      const nextArrow = currentPage.querySelector('.arrow-next');
-      if (nextArrow) nextArrow.classList.add('show');
-    }
-  }
+  // Update page indicator
+  currentPageEl.textContent = currentPageIndex + 1;
+  
+  // Update progress bar
+  updateProgress();
+}
+
+// Update progress bar
+function updateProgress() {
+  const progress = ((currentPageIndex + 1) / totalPages) * 100;
+  document.querySelectorAll('.progress-fill').forEach(fill => {
+    fill.style.width = `${progress}%`;
+  });
 }
 
 // Create decorative elements
@@ -1081,7 +1084,7 @@ function openBook() {
     
     // After cover opens, show first page
     setTimeout(() => {
-      pagesContainer.style.zIndex = '90'; // Above cover when open
+      pagesContainer.style.zIndex = '90';
       isBookOpen = true;
       isFlipping = false;
       
@@ -1090,10 +1093,6 @@ function openBook() {
       
       // Trigger confetti
       createConfetti(20);
-      
-      // Update controls
-      updateControls();
-      updateArrowIndicators();
       
       // Auto-fit book size
       autoFitBookSize();
@@ -1118,11 +1117,6 @@ function nextPage() {
       // Show new page
       updatePageVisibility();
       
-      // Update controls and progress
-      updateControls();
-      updateProgress();
-      updatePageIndicator();
-      
       isFlipping = false;
       
       // Trigger confetti on last page
@@ -1137,46 +1131,21 @@ function prevPage() {
   if (currentPageIndex > 0 && !isFlipping && isBookOpen) {
     isFlipping = true;
     
-    // Show previous page first
-    currentPageIndex--;
-    updatePageVisibility();
-    
+    // Add flipping animation to current page (it will go back)
     const currentPage = pages[currentPageIndex];
-    
-    // Add flipping back animation
     currentPage.classList.add('flipping-back');
     
     // Update after animation
     setTimeout(() => {
-      currentPage.classList.remove('flipping-back');
+      currentPage.classList.remove('flipping-back', 'active');
+      currentPageIndex--;
       
-      // Update controls and progress
-      updateControls();
-      updateProgress();
-      updatePageIndicator();
+      // Show previous page
+      updatePageVisibility();
       
       isFlipping = false;
     }, 800);
   }
-}
-
-// Update control buttons
-function updateControls() {
-  prevBtn.disabled = currentPageIndex === 0 || !isBookOpen || isFlipping;
-  nextBtn.disabled = currentPageIndex === totalPages - 1 || !isBookOpen || isFlipping;
-}
-
-// Update progress bar
-function updateProgress() {
-  const progress = ((currentPageIndex + 1) / totalPages) * 100;
-  document.querySelectorAll('.progress-fill').forEach(fill => {
-    fill.style.width = `${progress}%`;
-  });
-}
-
-// Update page indicator
-function updatePageIndicator() {
-  currentPageEl.textContent = currentPageIndex + 1;
 }
 
 // Create confetti
@@ -1258,19 +1227,21 @@ bookWrapper.addEventListener('touchend', e => {
   }
 });
 
-// Add click handlers for touch areas
-document.querySelectorAll('.touch-area.next').forEach(area => {
+// Add click handlers for touch areas and arrow indicators
+document.querySelectorAll('.touch-area.next, .arrow-next').forEach(area => {
   area.addEventListener('click', (e) => {
     if (isBookOpen && !isFlipping) {
       nextPage();
+      e.stopPropagation();
     }
   });
 });
 
-document.querySelectorAll('.touch-area.prev').forEach(area => {
+document.querySelectorAll('.touch-area.prev, .arrow-prev').forEach(area => {
   area.addEventListener('click', (e) => {
     if (isBookOpen && !isFlipping) {
       prevPage();
+      e.stopPropagation();
     }
   });
 });
@@ -1293,17 +1264,11 @@ document.addEventListener('keydown', e => {
     e.preventDefault();
     prevPage();
   }
-  
-  if (e.key === 'Escape') {
-    // Optional: add close book on escape
-  }
 });
 
 // Initialize
 createDecorations();
 updateControls();
-updateProgress();
-updatePageVisibility();
 
 // Auto-fit on resize
 window.addEventListener('resize', autoFitBookSize);
