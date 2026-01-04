@@ -915,7 +915,7 @@ function updatePageVisibility() {
   setTimeout(autoFitBookSize, 100);
 }
 
-// FIXED: Update control buttons
+// FIXED: Update control buttons - Next button is NEVER disabled
 function updateControls() {
   console.log("updateControls called", {
     currentPage: currentPageIndex + 1,
@@ -926,8 +926,8 @@ function updateControls() {
   // Prev button: Disabled only on first page OR if book not open OR during flipping
   prevBtn.disabled = (currentPageIndex === 0) || !isBookOpen || isFlipping;
   
-  // Next button: Disabled only on last page OR if book not open OR during flipping
-  nextBtn.disabled = (currentPageIndex === totalPages - 1) || !isBookOpen || isFlipping;
+  // Next button: NEVER disabled! Always enabled when book is open
+  nextBtn.disabled = !isBookOpen || isFlipping;
   
   // Update page indicator
   currentPageEl.textContent = currentPageIndex + 1;
@@ -937,7 +937,6 @@ function updateControls() {
   
   console.log(`Page: ${currentPageIndex + 1}, Prev disabled: ${prevBtn.disabled}, Next disabled: ${nextBtn.disabled}`);
 }
-
 // Update progress bar
 function updateProgress() {
   const progress = ((currentPageIndex + 1) / totalPages) * 100;
@@ -998,9 +997,9 @@ function openBook() {
   }
 }
 
-// Page navigation
+// Page navigation - MODIFIED to allow looping on last page
 function nextPage() {
-  if (currentPageIndex < totalPages - 1 && !isFlipping && isBookOpen) {
+  if (!isFlipping && isBookOpen) {
     isFlipping = true;
     const currentPage = pages[currentPageIndex];
     
@@ -1010,16 +1009,22 @@ function nextPage() {
     // Update after animation
     setTimeout(() => {
       currentPage.classList.remove('flipping', 'active');
-      currentPageIndex++;
+      
+      // If on last page, go back to first page (loop)
+      if (currentPageIndex === totalPages - 1) {
+        currentPageIndex = 0;
+      } else {
+        currentPageIndex++;
+      }
       
       // Show new page
       updatePageVisibility();
       
       isFlipping = false;
       
-      // Trigger confetti on last page
-      if (currentPageIndex === totalPages - 1) {
-        setTimeout(() => createConfetti(80), 300);
+      // Trigger confetti when returning to first page from last page
+      if (currentPageIndex === 0) {
+        setTimeout(() => createConfetti(30), 300);
       }
     }, 800);
   }
@@ -1145,3 +1150,4 @@ window.addEventListener('orientationchange', () => {
 </script>
 </body>
 </html>
+
