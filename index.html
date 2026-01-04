@@ -24,18 +24,18 @@ body{
 }
 
 /* BOOK */
-.book{
-  width:min(90vw,820px);
-  aspect-ratio:3/2;
-  margin:auto;
-  position:relative;
-  perspective:2200px;
-}
 .book-container{
   min-height:100vh;
   display:flex;
   align-items:center;
   justify-content:center;
+}
+.book{
+  width:min(90vw,820px);
+  aspect-ratio:3/2;
+  max-height:75vh;
+  position:relative;
+  perspective:2200px;
 }
 
 /* COVER */
@@ -86,19 +86,29 @@ body{
   display:flex;
   align-items:center;
   justify-content:center;
+  text-align:center;
+}
+.page::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to right,rgba(0,0,0,.08),transparent 40%);
+  pointer-events:none;
 }
 .page.flipped{transform:rotateY(-180deg)}
 .page h1{
   font-family:"Dancing Script",cursive;
   color:var(--accent);
+  font-size:2.2rem;
 }
 
 /* CONTROLS */
 .controls{
   position:fixed;
-  bottom:25px;
+  bottom:24px;
   display:flex;
   gap:14px;
+  z-index:50;
 }
 .controls button{
   width:48px;height:48px;
@@ -106,6 +116,7 @@ body{
   background:var(--accent);
   color:#fff;font-size:18px;
   cursor:pointer;
+  box-shadow:0 8px 18px rgba(0,0,0,.2);
 }
 .controls button:disabled{opacity:.4}
 
@@ -118,26 +129,24 @@ body{
   border:none;
   background:var(--accent);
   color:#fff;font-size:18px;
+  cursor:pointer;
 }
 
-/* FIREWORKS */
-.fireworks{
+/* CONFETTI */
+.confetti-container{
   position:fixed;
   inset:0;
   pointer-events:none;
+  z-index:100;
 }
-.spark{
+.confetti{
   position:absolute;
-  width:6px;height:6px;
-  border-radius:50%;
-  animation:explode 1s ease-out forwards;
+  width:10px;height:10px;
+  top:-10px;
+  animation:fall linear forwards;
 }
-@keyframes explode{
-  from{transform:translate(0,0);opacity:1}
-  to{
-    transform:translate(var(--x),var(--y));
-    opacity:0;
-  }
+@keyframes fall{
+  to{transform:translateY(110vh) rotate(360deg);opacity:0}
 }
 </style>
 </head>
@@ -163,7 +172,7 @@ body{
 </div>
 
 <!-- PAGES -->
-<div class="pages" id="pages">
+<div class="pages">
   <div class="page"><h1>Hope to see you there!</h1></div>
   <div class="page"><h1>Health Protocol</h1></div>
   <div class="page"><h1>Dress Code & Gifts</h1></div>
@@ -179,34 +188,37 @@ body{
   <button onclick="nextPage()" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
 </div>
 
-<div class="fireworks" id="fireworks"></div>
+<div class="confetti-container" id="confetti"></div>
 
 <script>
 const pages=[...document.querySelectorAll(".page")];
 const cover=document.getElementById("cover");
 const bgm=document.getElementById("bgm");
-const fireworks=document.getElementById("fireworks");
+const confettiBox=document.getElementById("confetti");
 
 let page=0,open=false,playing=false;
 
 pages.forEach((p,i)=>p.style.zIndex=pages.length-i);
 
+/* OPEN */
 function openBook(){
   cover.classList.add("open");
   open=true;
 }
 
+/* NEXT */
 function nextPage(){
   if(page<pages.length){
     pages[page]?.classList.add("flipped");
     page++;
     if(page===pages.length){
-      fireworksShow();
+      launchConfetti(80);
       setTimeout(closeBook,2500);
     }
   }
 }
 
+/* PREV */
 function prevPage(){
   if(page>0){
     page--;
@@ -214,7 +226,7 @@ function prevPage(){
   }
 }
 
-/* CLOSE COVER & RESET */
+/* CLOSE & RESET */
 function closeBook(){
   pages.forEach(p=>p.classList.remove("flipped"));
   page=0;
@@ -230,20 +242,35 @@ function toggleMusic(){
   playing=!playing;
 }
 
-/* FIREWORKS */
-function fireworksShow(){
-  for(let i=0;i<120;i++){
-    const s=document.createElement("div");
-    s.className="spark";
-    s.style.left="50%";
-    s.style.top="50%";
-    s.style.background=`hsl(${Math.random()*360},90%,70%)`;
-    s.style.setProperty("--x",`${(Math.random()-.5)*400}px`);
-    s.style.setProperty("--y",`${(Math.random()-.5)*400}px`);
-    fireworks.appendChild(s);
-    setTimeout(()=>s.remove(),1000);
+/* CONFETTI */
+function launchConfetti(count){
+  for(let i=0;i<count;i++){
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.background=`hsl(${Math.random()*360},80%,70%)`;
+    c.style.animationDuration=2+Math.random()*2+"s";
+    if(Math.random()>.6){
+      c.style.borderRadius="50%";
+      c.style.width="8px";
+      c.style.height="8px";
+    }
+    confettiBox.appendChild(c);
+    setTimeout(()=>c.remove(),3000);
   }
 }
+
+/* SWIPE */
+let startX=0;
+document.addEventListener("touchstart",e=>startX=e.touches[0].screenX);
+document.addEventListener("touchend",e=>{
+  const endX=e.changedTouches[0].screenX;
+  if(endX<startX-50)nextPage();
+  if(endX>startX+50)prevPage();
+});
+
+/* CLICK SOUND UNLOCK */
+document.addEventListener("click",()=>bgm.play().catch(()=>{}),{once:true});
 </script>
 
 </body>
