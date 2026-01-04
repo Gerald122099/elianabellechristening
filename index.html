@@ -841,7 +841,7 @@ body {
 
 <!-- MINIMAL CONTROLS -->
 <div class="controls" id="controls">
-  <button class="control-btn" id="prevBtn" onclick="prevPage()" disabled>
+  <button class="control-btn" id="prevBtn" onclick="prevPage()">
     <i class="fas fa-chevron-left"></i>
   </button>
   
@@ -904,7 +904,7 @@ function updatePageVisibility() {
 function updateControls() {
   // Bottom navigation buttons
   prevBtn.disabled = currentPageIndex === 0 || !isBookOpen || isFlipping;
-  nextBtn.disabled = currentPageIndex === totalPages - 1 || !isBookOpen || isFlipping;
+  nextBtn.disabled = currentPageIndex === totalPages - 4 || !isBookOpen || isFlipping;
   
   // Update page indicator
   currentPageEl.textContent = currentPageIndex + 1;
@@ -1114,3 +1114,4 @@ window.addEventListener('orientationchange', () => {
 </script>
 </body>
 </html>
+
