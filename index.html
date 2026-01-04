@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Eliana Belle Marquez | Christening Flipbook</title>
+<title>Eliana Belle Marquez | A Little Star’s Holy Day </title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
@@ -299,11 +299,12 @@ body {
   position: relative;
   z-index: 2;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* Custom scrollbar for page content */
 .page-content::-webkit-scrollbar {
-  width: 5px;
+  width: 6px;
 }
 
 .page-content::-webkit-scrollbar-track {
@@ -314,6 +315,36 @@ body {
 .page-content::-webkit-scrollbar-thumb {
   background: rgba(196, 154, 132, 0.3);
   border-radius: 3px;
+}
+
+.page-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(196, 154, 132, 0.5);
+}
+
+/* Scroll hint indicator */
+.scroll-hint {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--accent);
+  font-size: 0.8rem;
+  opacity: 0;
+  animation: fadeInOut 2s infinite;
+  pointer-events: none;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 4px 10px;
+  border-radius: 12px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0; transform: translateX(-50%) translateY(0); }
+  50% { opacity: 0.9; transform: translateX(-50%) translateY(-5px); }
 }
 
 .page h1 {
@@ -389,9 +420,53 @@ body {
   display: block;
 }
 
+/* ENHANCED PAGE 4 IMAGE */
+#page4 .baby {
+  width: clamp(140px, 30vw, 180px);
+  height: clamp(140px, 30vw, 180px);
+  border-radius: 50%;
+  border: 8px solid var(--accent);
+  overflow: hidden;
+  margin-bottom: 25px;
+  animation: float 4s infinite ease-in-out;
+  position: relative;
+  box-shadow: 0 15px 30px rgba(196, 154, 132, 0.2);
+}
+
+#page4 .baby img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s;
+}
+
+#page4 .baby:hover img {
+  transform: scale(1.05);
+}
+
+/* Add glow effect to page 4 image */
+#page4 .baby::after {
+  content: '';
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  right: -5px;
+  bottom: -5px;
+  border-radius: 50%;
+  border: 2px solid rgba(196, 154, 132, 0.3);
+  animation: pulse 2s infinite;
+  pointer-events: none;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.02); }
+}
+
 .rainbow {
-  width: clamp(120px, 25vw, 180px);
-  height: clamp(60px, 12vw, 90px);
+  width: clamp(140px, 28vw, 200px);
+  height: clamp(70px, 14vw, 100px);
   border-radius: 100px 100px 0 0;
   background: linear-gradient(to bottom,
     var(--pink),
@@ -399,7 +474,7 @@ body {
     #cde8d5,
     var(--blue),
     #e1c6f5);
-  margin: 15px auto;
+  margin: 20px auto;
   position: relative;
   overflow: hidden;
 }
@@ -534,11 +609,24 @@ body {
   justify-content: center;
 }
 
+/* Celebrate button on page 4 */
+.control-btn.celebrate {
+  width: auto;
+  padding: 0 20px;
+  border-radius: 25px;
+  gap: 8px;
+}
+
 @media (max-width: 480px) {
   .control-btn {
     width: 45px;
     height: 45px;
     font-size: 1.1rem;
+  }
+  
+  .control-btn.celebrate {
+    padding: 0 15px;
+    font-size: 1rem;
   }
 }
 
@@ -688,7 +776,7 @@ body {
       <!-- HARD COVER -->
       <div class="hard-cover" id="hardCover">
         <div class="cover-baby">
-          <img src="https://res.cloudinary.com/drpsrjjet/image/upload/v1767556381/ChatGPT_Image_Jan_5_2026_02_48_57_AM_n5laqx.png" alt="Baby Eliana">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Baby Eliana">
         </div>
         <h1>Eliana Belle Marquez</h1>
         <h2>Christening Celebration</h2>
@@ -703,6 +791,9 @@ body {
         
         <!-- PAGE 1: CHRISTENING DETAILS -->
         <div class="page" id="page1">
+          <div class="scroll-hint" id="scrollHint1">
+            <i class="fas fa-chevron-down"></i> Scroll down
+          </div>
           <div class="page-content">
             <div class="content-fitted">
               <div class="page-icon"><i class="fas fa-church"></i></div>
@@ -733,6 +824,9 @@ body {
         
         <!-- PAGE 2: DRESS CODE -->
         <div class="page" id="page2">
+          <div class="scroll-hint" id="scrollHint2">
+            <i class="fas fa-chevron-down"></i> Scroll down
+          </div>
           <div class="page-content">
             <div class="content-fitted">
               <div class="page-icon"><i class="fas fa-tshirt"></i></div>
@@ -771,6 +865,9 @@ body {
         
         <!-- PAGE 3: HEALTH PROTOCOL -->
         <div class="page" id="page3">
+          <div class="scroll-hint" id="scrollHint3">
+            <i class="fas fa-chevron-down"></i> Scroll down
+          </div>
           <div class="page-content">
             <div class="content-fitted">
               <div class="page-icon"><i class="fas fa-shield-alt"></i></div>
@@ -829,15 +926,24 @@ body {
         
         <!-- PAGE 4: HOPE TO SEE YOU THERE -->
         <div class="page" id="page4">
+          <div class="scroll-hint" id="scrollHint4">
+            <i class="fas fa-chevron-down"></i> Scroll down
+          </div>
           <div class="page-content">
             <div class="content-fitted">
               <div class="baby">
-                <img src="https://res.cloudinary.com/drpsrjjet/image/upload/v1767556381/ChatGPT_Image_Jan_5_2026_02_48_57_AM_n5laqx.png" alt="Baby Eliana">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Baby Eliana">
               </div>
               <div class="rainbow"></div>
               <h1>Thank You!</h1>
               <p>We're so excited to celebrate this special day with you</p>
-              <p>Lots of love,<br><strong>Eliana Belle Marquez</strong> & Family</p>
+              <p style="margin-top: 15px; font-size: 1.1rem; color: var(--accent);">
+                <i class="fas fa-heart" style="color: #ff6b6b; margin-right: 8px;"></i>
+                Lots of love,
+              </p>
+              <p style="font-size: 1.2rem; font-weight: 600; margin-top: 5px;">
+                <strong>Eliana Belle Marquez</strong> & Family
+              </p>
             </div>
             <div class="page-number">4</div>
           </div>
@@ -881,6 +987,7 @@ const decorContainer = document.getElementById('decor');
 const controls = document.getElementById('controls');
 const bookWrapper = document.querySelector('.book-wrapper');
 const book = document.querySelector('.book');
+const scrollHints = document.querySelectorAll('.scroll-hint');
 
 // State
 let currentPageIndex = 0;
@@ -899,6 +1006,20 @@ controls.style.pointerEvents = 'none';
 // Initially set page 1 as active
 pages[0].classList.add('active');
 
+// Check if page content is scrollable and show hint
+function checkScrollableContent() {
+  scrollHints.forEach((hint, index) => {
+    const page = pages[index];
+    if (page) {
+      const pageContent = page.querySelector('.page-content');
+      if (pageContent) {
+        const isScrollable = pageContent.scrollHeight > pageContent.clientHeight;
+        hint.style.display = isScrollable ? 'flex' : 'none';
+      }
+    }
+  });
+}
+
 // Show only the active page
 function updatePageVisibility() {
   pages.forEach((page, index) => {
@@ -912,6 +1033,9 @@ function updatePageVisibility() {
   updateControls();
   updateProgress();
   
+  // Check for scrollable content
+  setTimeout(checkScrollableContent, 100);
+  
   // Auto-fit content after page change
   setTimeout(autoFitBookSize, 100);
 }
@@ -924,11 +1048,20 @@ function updateControls() {
   // Next button: NEVER disabled! Always enabled when book is open (except during flip)
   nextBtn.disabled = !isBookOpen || isFlipping;
   
+  // Special handling for page 4 - change Next button to Celebrate
+  if (currentPageIndex === totalPages - 1 && isBookOpen && !isFlipping) {
+    nextBtn.innerHTML = '<i class="fas fa-glass-cheers"></i> Celebrate!';
+    nextBtn.classList.add('celebrate');
+    // Change click handler for page 4
+    nextBtn.onclick = celebrateAndClose;
+  } else {
+    nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+    nextBtn.classList.remove('celebrate');
+    nextBtn.onclick = nextPage;
+  }
+  
   // Update page indicator
   currentPageEl.textContent = currentPageIndex + 1;
-  
-  // Debug logging
-  console.log(`Page: ${currentPageIndex + 1}, Prev disabled: ${prevBtn.disabled}, Next disabled: ${nextBtn.disabled}, isFlipping: ${isFlipping}`);
 }
 
 // Update progress bar
@@ -1031,6 +1164,7 @@ function nextPage() {
       
       // Auto-fit book size
       setTimeout(autoFitBookSize, 100);
+      setTimeout(checkScrollableContent, 150);
       
       // Trigger confetti when returning to first page from last page
       if (currentPageIndex === 0) {
@@ -1072,7 +1206,72 @@ function prevPage() {
       
       // Auto-fit book size
       setTimeout(autoFitBookSize, 100);
+      setTimeout(checkScrollableContent, 150);
     }, 800);
+  }
+}
+
+// Celebrate and close function for page 4
+function celebrateAndClose() {
+  if (!isFlipping && isBookOpen) {
+    isFlipping = true;
+    
+    // Trigger massive confetti celebration
+    createConfetti(150);
+    
+    // Show celebration message
+    const page4 = document.getElementById('page4');
+    const celebrationMsg = document.createElement('div');
+    celebrationMsg.innerHTML = `
+      <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+                 background: rgba(255, 255, 255, 0.95); padding: 20px; border-radius: 15px; 
+                 text-align: center; z-index: 100; box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
+                 animation: fadeIn 0.5s;">
+        <h2 style="color: var(--accent); margin-bottom: 10px;">🎉 Thank You! 🎉</h2>
+        <p>We're so grateful you joined us!</p>
+        <p style="margin-top: 10px; font-size: 0.9rem;">Closing book...</p>
+      </div>
+    `;
+    page4.appendChild(celebrationMsg);
+    
+    // Close book after celebration
+    setTimeout(() => {
+      // Remove celebration message
+      celebrationMsg.remove();
+      
+      // Reset all pages
+      pages.forEach(page => {
+        page.classList.remove('active', 'flipping', 'flipping-back');
+        page.style.transform = 'rotateY(0deg)';
+      });
+      
+      // Reset current page
+      currentPageIndex = 0;
+      
+      // Close the cover with animation
+      hardCover.classList.remove('open');
+      hardCover.classList.add('closing');
+      
+      // Hide controls
+      controls.style.opacity = '0';
+      controls.style.pointerEvents = 'none';
+      
+      // Reset Next button
+      nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+      nextBtn.classList.remove('celebrate');
+      nextBtn.onclick = nextPage;
+      
+      setTimeout(() => {
+        hardCover.classList.remove('closing');
+        pagesContainer.style.zIndex = '1';
+        isBookOpen = false;
+        isFlipping = false;
+        
+        // Reset to page 1
+        pages[0].classList.add('active');
+        updateControls();
+      }, 1200);
+    }, 2000);
   }
 }
 
@@ -1089,8 +1288,11 @@ function createConfetti(count) {
     // Random shape
     if (Math.random() > 0.7) {
       confetti.style.borderRadius = '50%';
-      confetti.style.width = '8px';
-      confetti.style.height = '8px';
+      confetti.style.width = '10px';
+      confetti.style.height = '10px';
+    } else if (Math.random() > 0.5) {
+      confetti.style.width = '15px';
+      confetti.style.height = '5px';
     }
     
     confettiContainer.appendChild(confetti);
@@ -1121,19 +1323,17 @@ function autoFitBookSize() {
   const contentHeight = pageContent.scrollHeight;
   
   // Calculate needed height with padding
-  const neededHeight = contentHeight + 80; // Add padding
+  const neededHeight = contentHeight + 100; // Add padding
   
   // Set minimum and maximum heights
-  const minHeight = 380;
-  const maxHeight = 600;
+  const minHeight = 400;
+  const maxHeight = 650;
   const finalHeight = Math.max(minHeight, Math.min(neededHeight, maxHeight));
   
   // Apply the height
   book.style.height = `${finalHeight}px`;
   bookWrapper.style.height = `${finalHeight}px`;
   hardCover.style.height = `${finalHeight}px`;
-  
-  console.log(`Auto-fit: content=${contentHeight}px, final=${finalHeight}px`);
 }
 
 // Add keyboard navigation
@@ -1147,7 +1347,11 @@ document.addEventListener('keydown', e => {
   
   if (e.key === 'ArrowRight' || e.key === ' ') {
     e.preventDefault();
-    nextPage();
+    if (currentPageIndex === totalPages - 1) {
+      celebrateAndClose();
+    } else {
+      nextPage();
+    }
   }
   
   if (e.key === 'ArrowLeft') {
@@ -1162,20 +1366,43 @@ createDecorations();
 // Call updateControls initially to set correct button states
 updateControls();
 
+// Check scrollable content on load
+setTimeout(checkScrollableContent, 500);
+
 // Auto-fit on resize
-window.addEventListener('resize', autoFitBookSize);
+window.addEventListener('resize', () => {
+  autoFitBookSize();
+  setTimeout(checkScrollableContent, 100);
+});
+
 window.addEventListener('load', () => {
   setTimeout(autoFitBookSize, 100);
+  setTimeout(checkScrollableContent, 500);
 });
 
 // Also fit on orientation change
 window.addEventListener('orientationchange', () => {
-  setTimeout(autoFitBookSize, 300);
+  setTimeout(() => {
+    autoFitBookSize();
+    checkScrollableContent();
+  }, 300);
+});
+
+// Hide scroll hints when user starts scrolling
+pages.forEach(page => {
+  const pageContent = page.querySelector('.page-content');
+  if (pageContent) {
+    pageContent.addEventListener('scroll', () => {
+      const scrollHint = page.querySelector('.scroll-hint');
+      if (scrollHint) {
+        scrollHint.style.opacity = '0';
+        setTimeout(() => {
+          scrollHint.style.display = 'none';
+        }, 500);
+      }
+    });
+  }
 });
 </script>
 </body>
 </html>
-
-
-
-
