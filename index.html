@@ -250,7 +250,7 @@ body {
   padding: 25px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   overflow: hidden;
   backface-visibility: hidden;
@@ -274,12 +274,28 @@ body {
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   text-align: center;
   padding: 20px;
   position: relative;
   z-index: 2;
+  overflow-y: auto;
+  max-height: 100%;
+}
+
+/* Custom scrollbar for page content */
+.page-content::-webkit-scrollbar {
+  width: 5px;
+}
+
+.page-content::-webkit-scrollbar-track {
+  background: rgba(196, 154, 132, 0.1);
+  border-radius: 3px;
+}
+
+.page-content::-webkit-scrollbar-thumb {
+  background: rgba(196, 154, 132, 0.3);
+  border-radius: 3px;
 }
 
 .page h1 {
@@ -314,6 +330,7 @@ body {
   margin: 8px 0;
   color: var(--text-light);
   font-size: clamp(0.9rem, 1.8vw, 1rem);
+  max-width: 90%;
 }
 
 .page strong {
@@ -390,59 +407,140 @@ body {
   background: var(--paper);
 }
 
-#page2 .protocol-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 12px 0;
-  font-size: clamp(1rem, 2vw, 1.1rem);
-}
-
-.protocol-icon {
-  font-size: 1.8rem;
-  margin-right: 15px;
-  color: var(--accent);
-}
-
-#page3 .gift-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
-  margin-top: 20px;
-  width: 80%;
-}
-
-.gift-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 15px;
-  background: rgba(196, 154, 132, 0.1);
-  border-radius: 10px;
-  transition: transform 0.3s;
-}
-
-.gift-item:hover {
-  transform: translateY(-5px);
-}
-
-.gift-item i {
-  font-size: 2rem;
-  color: var(--accent);
-  margin-bottom: 8px;
-}
-
-#page4 .details {
+/* Page 1 - Christening Details */
+#page1 .details {
   background: rgba(196, 154, 132, 0.1);
   padding: 20px;
   border-radius: 15px;
   margin: 15px 0;
   width: 90%;
+  text-align: center;
 }
 
-.location-icon {
+#page1 .location-icon {
   color: var(--accent);
   margin-right: 10px;
+}
+
+/* Page 2 - Dress Code */
+#page2 .section-title {
+  font-size: 1.4rem;
+  color: var(--accent);
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-weight: 600;
+  text-align: center;
+}
+
+#page2 .section-content {
+  background: rgba(196, 154, 132, 0.05);
+  padding: 15px;
+  border-radius: 10px;
+  margin: 10px 0;
+  width: 90%;
+  text-align: left;
+}
+
+#page2 .gift-section {
+  margin-top: 20px;
+  text-align: center;
+}
+
+#page2 .gift-item {
+  display: inline-block;
+  margin: 8px;
+  padding: 10px 15px;
+  background: rgba(196, 154, 132, 0.1);
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+/* Page 3 - Health Protocol */
+#page3 .protocol-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+  width: 90%;
+  margin-top: 20px;
+}
+
+#page3 .protocol-item {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  background: rgba(196, 154, 132, 0.1);
+  border-radius: 10px;
+  text-align: left;
+}
+
+#page3 .protocol-icon {
+  font-size: 1.8rem;
+  margin-right: 15px;
+  color: var(--accent);
+  min-width: 40px;
+  text-align: center;
+}
+
+#page3 .protocol-text {
+  flex: 1;
+}
+
+/* ===== CLICKABLE ARROW INDICATORS ===== */
+.arrow-indicator {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 60px;
+  height: 60px;
+  background: rgba(196, 154, 132, 0.8);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 25;
+  transition: all 0.3s;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.arrow-indicator.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.arrow-indicator:hover {
+  background: var(--accent);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.arrow-prev {
+  left: 10px;
+}
+
+.arrow-next {
+  right: 10px;
+}
+
+/* Touch areas for mobile */
+.touch-area {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 40%;
+  z-index: 20;
+  cursor: pointer;
+}
+
+.touch-area.prev {
+  left: 0;
+}
+
+.touch-area.next {
+  right: 0;
 }
 
 /* ===== MINIMAL CONTROLS ===== */
@@ -518,37 +616,6 @@ body {
   color: var(--text);
   font-weight: 600;
   font-size: 1.1rem;
-}
-
-.music-toggle {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  font-size: 24px;
-  z-index: 100;
-  border: none;
-  background: var(--accent);
-  color: white;
-  cursor: pointer;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-  transition: all 0.3s;
-}
-
-.music-toggle:hover {
-  transform: scale(1.1);
-}
-
-@media (max-width: 768px) {
-  .music-toggle {
-    width: 50px;
-    height: 50px;
-    font-size: 20px;
-    top: 15px;
-    right: 15px;
-  }
 }
 
 /* ===== CONFETTI ===== */
@@ -650,31 +717,6 @@ body {
   transition: width 0.5s cubic-bezier(0.42, 0, 0.58, 1);
 }
 
-/* Touch area indicators for mobile */
-.touch-area {
-  position: absolute;
-  top: 0;
-  height: 100%;
-  width: 30%;
-  z-index: 10;
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.touch-area.prev {
-  left: 0;
-}
-
-.touch-area.next {
-  right: 0;
-}
-
-.touch-area:hover {
-  opacity: 0.1;
-  background: rgba(196, 154, 132, 0.2);
-}
-
 /* Mobile swipe hint */
 .swipe-hint {
   position: absolute;
@@ -703,6 +745,16 @@ body {
     display: flex;
   }
 }
+
+/* Ensure content doesn't overlay */
+.page-content > * {
+  position: relative;
+  z-index: 2;
+}
+
+.page {
+  overflow: hidden;
+}
 </style>
 </head>
 <body>
@@ -710,27 +762,17 @@ body {
 <!-- DECOR -->
 <div class="decor-container" id="decor"></div>
 
-<!-- MUSIC TOGGLE -->
-<button class="music-toggle" id="musicToggle" onclick="toggleMusic()">
-  <i class="fas fa-music"></i>
-</button>
-<audio id="bgm" loop preload="auto">
-  <source src="https://assets.codepen.io/1468070/lullaby.mp3" type="audio/mpeg">
-  <source src="https://assets.codepen.io/1468070/lullaby.ogg" type="audio/ogg">
-</audio>
-
 <!-- FLIPBOOK -->
 <div class="book-container">
   <div class="book-wrapper">
     <div class="swipe-hint">
-      <i class="fas fa-arrow-left"></i> Swipe to flip <i class="fas fa-arrow-right"></i>
+      <i class="fas fa-arrow-left"></i> Swipe or click arrows to flip <i class="fas fa-arrow-right"></i>
     </div>
     
     <div class="book">
       <!-- HARD COVER -->
       <div class="hard-cover" id="hardCover">
         <div class="cover-baby">
-          <!-- Image API suggestion: Use Unsplash with baby theme -->
           <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Baby Eliana">
         </div>
         <h1>Eliana Belle Marquez</h1>
@@ -744,90 +786,15 @@ body {
       <!-- PAGES -->
       <div class="pages-container" id="pagesContainer">
         
-        <!-- PAGE 1 -->
+        <!-- PAGE 1: CHRISTENING DETAILS -->
         <div class="page" id="page1">
-          <div class="touch-area prev"></div>
-          <div class="touch-area next"></div>
-          <div class="page-content">
-            <div class="baby">
-              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Baby Eliana">
-            </div>
-            <div class="rainbow"></div>
-            <h1>Hope to see you there!</h1>
-            <p>We're so excited to celebrate this special day with you</p>
-            <p>Lots of love,<br><strong>Eliana Belle Marquez</strong> & Family</p>
-            <div class="page-number">1</div>
+          <!-- Clickable arrow indicators -->
+          <div class="arrow-indicator arrow-next" onclick="nextPage()">
+            <i class="fas fa-chevron-right"></i>
           </div>
-          <div class="flip-progress"><div class="progress-fill"></div></div>
-        </div>
-        
-        <!-- PAGE 2 -->
-        <div class="page" id="page2">
-          <div class="touch-area prev"></div>
+          
           <div class="touch-area next"></div>
-          <div class="page-content">
-            <div class="page-icon"><i class="fas fa-shield-alt"></i></div>
-            <h1>Health Protocol</h1>
-            <div class="protocol-item">
-              <span class="protocol-icon">🚫</span>
-              <span>No Kissing Baby</span>
-            </div>
-            <div class="protocol-item">
-              <span class="protocol-icon">🧴</span>
-              <span>Sanitize Hands</span>
-            </div>
-            <div class="protocol-item">
-              <span class="protocol-icon">😷</span>
-              <span>Wear Mask</span>
-            </div>
-            <div class="protocol-item">
-              <span class="protocol-icon">🚭</span>
-              <span>No Smoking</span>
-            </div>
-            <p style="margin-top: 20px; font-size: 0.9rem;">Your cooperation ensures a safe celebration for everyone</p>
-            <div class="page-number">2</div>
-          </div>
-          <div class="flip-progress"><div class="progress-fill"></div></div>
-        </div>
-        
-        <!-- PAGE 3 -->
-        <div class="page" id="page3">
-          <div class="touch-area prev"></div>
-          <div class="touch-area next"></div>
-          <div class="page-content">
-            <div class="page-icon"><i class="fas fa-tshirt"></i></div>
-            <h1>Dress Code</h1>
-            <p><strong>Guests:</strong> Casual / Neutral Colors</p>
-            <p><strong>Godparents:</strong> White Casual Attire</p>
-            
-            <h2 style="margin-top: 25px;">Gift Ideas</h2>
-            <div class="gift-grid">
-              <div class="gift-item">
-                <i class="fas fa-baby"></i>
-                <span>Baby Clothes</span>
-              </div>
-              <div class="gift-item">
-                <i class="fas fa-cube"></i>
-                <span>Montessori Toys</span>
-              </div>
-              <div class="gift-item">
-                <i class="fas fa-paperclip"></i>
-                <span>Diapers</span>
-              </div>
-              <div class="gift-item">
-                <i class="fas fa-piggy-bank"></i>
-                <span>Savings</span>
-              </div>
-            </div>
-            <div class="page-number">3</div>
-          </div>
-          <div class="flip-progress"><div class="progress-fill"></div></div>
-        </div>
-        
-        <!-- PAGE 4 -->
-        <div class="page" id="page4">
-          <div class="touch-area prev"></div>
-          <div class="touch-area next"></div>
+          
           <div class="page-content">
             <div class="page-icon"><i class="fas fa-church"></i></div>
             <h1>Christening</h1>
@@ -849,6 +816,142 @@ body {
             </div>
             
             <p style="margin-top: 15px; font-style: italic;">We can't wait to celebrate with you!</p>
+            <div class="page-number">1</div>
+          </div>
+          <div class="flip-progress"><div class="progress-fill"></div></div>
+        </div>
+        
+        <!-- PAGE 2: DRESS CODE -->
+        <div class="page" id="page2">
+          <!-- Clickable arrow indicators -->
+          <div class="arrow-indicator arrow-prev" onclick="prevPage()">
+            <i class="fas fa-chevron-left"></i>
+          </div>
+          <div class="arrow-indicator arrow-next" onclick="nextPage()">
+            <i class="fas fa-chevron-right"></i>
+          </div>
+          
+          <div class="touch-area prev"></div>
+          <div class="touch-area next"></div>
+          
+          <div class="page-content">
+            <div class="page-icon"><i class="fas fa-tshirt"></i></div>
+            <h1>Dress Code</h1>
+            
+            <div class="section-content">
+              <h2 class="section-title">FOR GUESTS</h2>
+              <p>You may wear casual attire, neutral colors will do.</p>
+            </div>
+            
+            <div class="section-content">
+              <h2 class="section-title">FOR GODPARENTS</h2>
+              <p>Wear white casual attire</p>
+            </div>
+            
+            <div class="gift-section">
+              <h2 class="section-title">Gift Ideas</h2>
+              <p>Your prayers and presence are highly appreciated, but if you wish to spoil Eliana, here are the things you might consider:</p>
+              
+              <div style="margin: 15px 0;">
+                <div class="gift-item">0-6 Month Baby Clothes</div>
+                <div class="gift-item">Large Size Diapers</div>
+                <div class="gift-item">Montessori Toys</div>
+                <div class="gift-item">Monetary Gift for Savings</div>
+              </div>
+              
+              <p style="font-style: italic; margin-top: 15px; font-size: 0.9rem;">
+                Just because we gave ideas doesn't mean you are obligated to give. Your presence is the most precious gift you can give.
+              </p>
+            </div>
+            <div class="page-number">2</div>
+          </div>
+          <div class="flip-progress"><div class="progress-fill"></div></div>
+        </div>
+        
+        <!-- PAGE 3: HEALTH PROTOCOL -->
+        <div class="page" id="page3">
+          <!-- Clickable arrow indicators -->
+          <div class="arrow-indicator arrow-prev" onclick="prevPage()">
+            <i class="fas fa-chevron-left"></i>
+          </div>
+          <div class="arrow-indicator arrow-next" onclick="nextPage()">
+            <i class="fas fa-chevron-right"></i>
+          </div>
+          
+          <div class="touch-area prev"></div>
+          <div class="touch-area next"></div>
+          
+          <div class="page-content">
+            <div class="page-icon"><i class="fas fa-shield-alt"></i></div>
+            <h1>Health Protocol</h1>
+            
+            <div class="protocol-grid">
+              <div class="protocol-item">
+                <div class="protocol-icon">🧴</div>
+                <div class="protocol-text">
+                  <strong>Sanitize Hands</strong><br>
+                  Please use hand sanitizer upon arrival
+                </div>
+              </div>
+              
+              <div class="protocol-item">
+                <div class="protocol-icon">😷</div>
+                <div class="protocol-text">
+                  <strong>Wear Mask if Needed</strong><br>
+                  Masks are optional but recommended
+                </div>
+              </div>
+              
+              <div class="protocol-item">
+                <div class="protocol-icon">🚫</div>
+                <div class="protocol-text">
+                  <strong>No Kissing the Baby</strong><br>
+                  For the safety of our little one
+                </div>
+              </div>
+              
+              <div class="protocol-item">
+                <div class="protocol-icon">⏰</div>
+                <div class="protocol-text">
+                  <strong>Godparents Arrival</strong><br>
+                  Please arrive at the church earlier than the given time
+                </div>
+              </div>
+              
+              <div class="protocol-item">
+                <div class="protocol-icon">👕</div>
+                <div class="protocol-text">
+                  <strong>Godparents Attire</strong><br>
+                  Please wear white casual attire as requested
+                </div>
+              </div>
+            </div>
+            
+            <p style="margin-top: 20px; font-size: 0.9rem; font-style: italic;">
+              Your cooperation ensures a safe and joyful celebration for everyone.
+            </p>
+            <div class="page-number">3</div>
+          </div>
+          <div class="flip-progress"><div class="progress-fill"></div></div>
+        </div>
+        
+        <!-- PAGE 4: HOPE TO SEE YOU THERE -->
+        <div class="page" id="page4">
+          <!-- Clickable arrow indicators -->
+          <div class="arrow-indicator arrow-prev" onclick="prevPage()">
+            <i class="fas fa-chevron-left"></i>
+          </div>
+          
+          <div class="touch-area prev"></div>
+          
+          <div class="page-content">
+            <div class="baby">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80" alt="Baby Eliana">
+            </div>
+            <div class="rainbow"></div>
+            <h1>Hope to see you there!</h1>
+            <p>We're so excited to celebrate this special day with you</p>
+            <p>Lots of love,<br><strong>Eliana Belle Marquez</strong> & Family</p>
             <div class="page-number">4</div>
           </div>
           <div class="flip-progress"><div class="progress-fill"></div></div>
@@ -886,17 +989,15 @@ const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
 const currentPageEl = document.getElementById('currentPage');
 const totalPagesEl = document.getElementById('totalPages');
-const musicToggle = document.getElementById('musicToggle');
-const bgm = document.getElementById('bgm');
 const confettiContainer = document.getElementById('confettiContainer');
 const decorContainer = document.getElementById('decor');
 const controls = document.getElementById('controls');
 const bookWrapper = document.querySelector('.book-wrapper');
+const arrowIndicators = document.querySelectorAll('.arrow-indicator');
 
 // State
 let currentPage = 0;
 let isBookOpen = false;
-let isMusicPlaying = false;
 let isFlipping = false;
 const totalPages = pages.length;
 
@@ -908,13 +1009,24 @@ currentPageEl.textContent = currentPage + 1;
 controls.style.opacity = '0';
 controls.style.pointerEvents = 'none';
 
-// Image API Suggestions:
-// 1. Unsplash API: https://unsplash.com/developers (free, high quality)
-// 2. Pexels API: https://www.pexels.com/api/ (free, good variety)
-// 3. Cloudinary: https://cloudinary.com (for uploading your own images)
-
-// Example Unsplash URL structure for baby images:
-// https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80
+// Update arrow indicators visibility
+function updateArrowIndicators() {
+  arrowIndicators.forEach(arrow => {
+    arrow.classList.remove('show');
+  });
+  
+  if (isBookOpen && !isFlipping) {
+    // Show prev arrow if not on first page
+    if (currentPage > 0) {
+      document.querySelector('.arrow-prev')?.classList.add('show');
+    }
+    
+    // Show next arrow if not on last page
+    if (currentPage < totalPages - 1) {
+      document.querySelector('.arrow-next')?.classList.add('show');
+    }
+  }
+}
 
 // Create decorative elements
 function createDecorations() {
@@ -970,6 +1082,7 @@ function openBook() {
       
       // Update page indicator
       updatePageIndicator();
+      updateArrowIndicators();
       
       // Auto-fit book size
       autoFitBookSize();
@@ -985,6 +1098,9 @@ function closeBook() {
     // Hide controls
     controls.style.opacity = '0';
     controls.style.pointerEvents = 'none';
+    
+    // Hide arrow indicators
+    updateArrowIndicators();
     
     // Reset all pages to initial state
     pages.forEach(page => {
@@ -1016,6 +1132,9 @@ function nextPage() {
   if (currentPage < totalPages - 1 && !isFlipping && isBookOpen) {
     isFlipping = true;
     
+    // Hide arrow indicators during flip
+    updateArrowIndicators();
+    
     // Add flipping animation to current page
     pages[currentPage].classList.add('flipping');
     
@@ -1029,15 +1148,13 @@ function nextPage() {
       updateControls();
       updateProgress();
       updatePageIndicator();
+      updateArrowIndicators();
       
       isFlipping = false;
       
       // Trigger confetti on last page
       if (currentPage === totalPages - 1) {
         setTimeout(() => createConfetti(100), 300);
-        
-        // Auto-close book after last page (optional)
-        // setTimeout(() => closeBook(), 3000);
       }
     }, 800);
   }
@@ -1046,6 +1163,10 @@ function nextPage() {
 function prevPage() {
   if (currentPage > 0 && !isFlipping && isBookOpen) {
     isFlipping = true;
+    
+    // Hide arrow indicators during flip
+    updateArrowIndicators();
+    
     currentPage--;
     
     // Add flipping back animation to previous page
@@ -1060,6 +1181,7 @@ function prevPage() {
       updateControls();
       updateProgress();
       updatePageIndicator();
+      updateArrowIndicators();
       
       isFlipping = false;
     }, 800);
@@ -1083,35 +1205,6 @@ function updateProgress() {
 // Update page indicator
 function updatePageIndicator() {
   currentPageEl.textContent = currentPage + 1;
-}
-
-// Music control with fallback audio
-function toggleMusic() {
-  if (isMusicPlaying) {
-    bgm.pause();
-    musicToggle.innerHTML = '<i class="fas fa-music"></i>';
-    musicToggle.style.background = 'var(--accent)';
-  } else {
-    // Try to play with user interaction
-    const playPromise = bgm.play();
-    
-    if (playPromise !== undefined) {
-      playPromise.catch(e => {
-        console.log("Audio play failed, trying alternative source:", e);
-        // Fallback to a different audio source if first fails
-        bgm.src = "https://assets.codepen.io/1468070/soft-lullaby.mp3";
-        bgm.play().catch(e2 => {
-          console.log("All audio sources failed:", e2);
-          musicToggle.style.background = '#ccc';
-          musicToggle.disabled = true;
-        });
-      });
-    }
-    
-    musicToggle.innerHTML = '<i class="fas fa-volume-up"></i>';
-    musicToggle.style.background = 'var(--text)';
-  }
-  isMusicPlaying = !isMusicPlaying;
 }
 
 // Create confetti with realistic physics
@@ -1154,16 +1247,23 @@ function autoFitBookSize() {
   
   // Calculate maximum content height
   pagesContent.forEach(content => {
+    content.style.height = 'auto';
     const height = content.scrollHeight;
     if (height > maxHeight) maxHeight = height;
+    content.style.height = '100%';
   });
   
   // Add padding and adjust book height
-  const newHeight = Math.min(Math.max(maxHeight + 100, 350), 600);
+  const newHeight = Math.min(Math.max(maxHeight + 80, 350), 600);
   document.documentElement.style.setProperty('--book-height', `${newHeight}px`);
   
   // Update container
   bookWrapper.style.minHeight = `${newHeight}px`;
+  
+  // Ensure content fits without overlay
+  pagesContent.forEach(content => {
+    content.style.overflowY = maxHeight > newHeight - 80 ? 'auto' : 'hidden';
+  });
 }
 
 // Add touch/swipe support for mobile with better detection
@@ -1209,6 +1309,25 @@ function handleSwipe() {
   }
 }
 
+// Add click handlers for touch areas
+document.querySelectorAll('.touch-area.next').forEach(area => {
+  area.addEventListener('click', (e) => {
+    if (isBookOpen && !isFlipping) {
+      nextPage();
+    }
+    e.stopPropagation();
+  });
+});
+
+document.querySelectorAll('.touch-area.prev').forEach(area => {
+  area.addEventListener('click', (e) => {
+    if (isBookOpen && !isFlipping) {
+      prevPage();
+    }
+    e.stopPropagation();
+  });
+});
+
 // Add keyboard navigation
 document.addEventListener('keydown', e => {
   if (!isBookOpen && (e.key === 'Enter' || e.key === ' ')) {
@@ -1231,29 +1350,6 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     closeBook();
   }
-  
-  if (e.key === 'm' || e.key === 'M') {
-    toggleMusic();
-  }
-});
-
-// Add click handlers for touch areas
-document.querySelectorAll('.touch-area.next').forEach(area => {
-  area.addEventListener('click', (e) => {
-    if (isBookOpen && !isFlipping) {
-      nextPage();
-    }
-    e.stopPropagation();
-  });
-});
-
-document.querySelectorAll('.touch-area.prev').forEach(area => {
-  area.addEventListener('click', (e) => {
-    if (isBookOpen && !isFlipping) {
-      prevPage();
-    }
-    e.stopPropagation();
-  });
 });
 
 // Add double-tap to close on last page
@@ -1278,16 +1374,23 @@ bookWrapper.addEventListener('touchend', (e) => {
 createDecorations();
 updateControls();
 updateProgress();
+updateArrowIndicators();
 
-// Auto-fit on resize
+// Auto-fit on resize and load
 window.addEventListener('resize', autoFitBookSize);
-
-// Preload audio to reduce latency
 window.addEventListener('load', () => {
-  bgm.load();
-  
-  // Auto-fit book size after images load
   setTimeout(autoFitBookSize, 500);
+});
+
+// Ensure proper content display after page flip
+pages.forEach(page => {
+  const observer = new ResizeObserver(() => {
+    if (isBookOpen) {
+      autoFitBookSize();
+    }
+  });
+  
+  observer.observe(page);
 });
 </script>
 </body>
