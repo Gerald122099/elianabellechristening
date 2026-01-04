@@ -841,7 +841,7 @@ body {
 
 <!-- MINIMAL CONTROLS -->
 <div class="controls" id="controls">
-  <button class="control-btn" id="prevBtn" onclick="prevPage()">
+  <button class="control-btn" id="prevBtn" onclick="prevPage()" disabled>
     <i class="fas fa-chevron-left"></i>
   </button>
   
@@ -900,17 +900,24 @@ function updatePageVisibility() {
   setTimeout(autoFitBookSize, 100);
 }
 
-// Update control buttons
+// UPDATE THIS FUNCTION - FIX FOR BUTTON ENABLING
 function updateControls() {
-  // Bottom navigation buttons
+  // Enable Prev button if NOT on first page AND book is open AND not flipping
+  // Disable Prev button only on first page (page 0)
   prevBtn.disabled = currentPageIndex === 0 || !isBookOpen || isFlipping;
-  nextBtn.disabled = currentPageIndex === totalPages - 4 || !isBookOpen || isFlipping;
+  
+  // Enable Next button if NOT on last page AND book is open AND not flipping
+  // Disable Next button only on last page (page 3 when totalPages = 4)
+  nextBtn.disabled = currentPageIndex === totalPages - 1 || !isBookOpen || isFlipping;
   
   // Update page indicator
   currentPageEl.textContent = currentPageIndex + 1;
   
   // Update progress bar
   updateProgress();
+  
+  // Debug logging (you can remove this after testing)
+  console.log(`Page: ${currentPageIndex + 1}, Prev disabled: ${prevBtn.disabled}, Next disabled: ${nextBtn.disabled}`);
 }
 
 // Update progress bar
@@ -1114,4 +1121,3 @@ window.addEventListener('orientationchange', () => {
 </script>
 </body>
 </html>
-
