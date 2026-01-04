@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
 <style>
 :root {
   --bg: #fdf6f2;
@@ -84,66 +85,6 @@ body {
   to { opacity: 1; transform: scale(1.2); }
 }
 
-/* ===== MODAL ===== */
-.modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.8);
-  z-index: 1000;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-content {
-  background: var(--paper);
-  padding: 30px;
-  border-radius: 20px;
-  max-width: 500px;
-  width: 90%;
-  text-align: center;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-}
-
-.modal-content h3 {
-  color: var(--accent);
-  margin-bottom: 20px;
-  font-family: 'Dancing Script', cursive;
-  font-size: 2rem;
-}
-
-.upload-area {
-  border: 3px dashed var(--accent-light);
-  border-radius: 15px;
-  padding: 40px 20px;
-  margin: 20px 0;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.upload-area:hover {
-  background: rgba(196, 154, 132, 0.1);
-  border-color: var(--accent);
-}
-
-.upload-area i {
-  font-size: 48px;
-  color: var(--accent);
-  margin-bottom: 15px;
-}
-
-.image-preview {
-  max-width: 200px;
-  max-height: 200px;
-  border-radius: 10px;
-  margin: 20px auto;
-  display: none;
-  border: 3px solid var(--accent-light);
-}
-
 /* ===== FLIPBOOK ===== */
 .book-container {
   display: flex;
@@ -158,7 +99,9 @@ body {
   max-width: 800px;
   height: 500px;
   position: relative;
+  perspective: 2000px;
   margin: 20px auto;
+  cursor: pointer;
 }
 
 @media (max-width: 768px) {
@@ -189,13 +132,13 @@ body {
   color: white;
   padding: 30px;
   text-align: center;
+  transform-origin: left;
+  transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
   backface-visibility: hidden;
-  animation: coverEntrance 1s ease-out;
 }
 
-@keyframes coverEntrance {
-  from { transform: scale(0.8); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+.hard-cover.open {
+  transform: rotateY(-180deg);
 }
 
 .hard-cover h1 {
@@ -252,7 +195,7 @@ body {
   position: relative;
   width: 100%;
   height: 100%;
-  display: none;
+  transform-style: preserve-3d;
 }
 
 .page {
@@ -262,27 +205,15 @@ body {
   background: var(--paper);
   border-radius: 10px;
   box-shadow: 0 5px 15px var(--shadow);
+  transform-origin: left;
+  transition: transform 1s cubic-bezier(0.645, 0.045, 0.355, 1);
   padding: 30px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  opacity: 0;
-  transform: translateX(100px);
-  transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.8s ease;
-}
-
-.page.active {
-  opacity: 1;
-  transform: translateX(0);
-  z-index: 2;
-}
-
-.page.prev {
-  opacity: 0;
-  transform: translateX(-100px);
-  z-index: 1;
+  backface-visibility: hidden;
 }
 
 .page-content {
@@ -468,7 +399,7 @@ body {
   }
 }
 
-.control-btn {
+button {
   padding: 14px 25px;
   border: none;
   border-radius: 30px;
@@ -484,16 +415,16 @@ body {
   gap: 8px;
 }
 
-.control-btn:hover {
+button:hover {
   transform: translateY(-3px);
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
 }
 
-.control-btn:active {
+button:active {
   transform: translateY(1px);
 }
 
-.control-btn:disabled {
+button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
@@ -511,42 +442,25 @@ body {
   font-weight: 500;
 }
 
-.top-controls {
+.music-toggle {
   position: fixed;
   top: 20px;
   right: 20px;
-  display: flex;
-  gap: 10px;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
   z-index: 100;
 }
 
 @media (max-width: 768px) {
-  .top-controls {
+  .music-toggle {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
     top: 15px;
     right: 15px;
-    flex-direction: column;
   }
-}
-
-.icon-btn {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: white;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-  transition: all 0.3s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.icon-btn:hover {
-  transform: scale(1.1);
-  background: var(--text);
 }
 
 /* ===== CONFETTI ===== */
@@ -571,196 +485,50 @@ body {
   to { transform: translateY(110vh) rotate(360deg); }
 }
 
-/* ===== WIPE ANIMATION ===== */
-@keyframes wipeNext {
-  from {
-    clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
-  }
-  to {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-  }
+/* ===== FLIP ANIMATION ===== */
+.flip {
+  animation: pageFlip 0.8s ease-out;
 }
 
-@keyframes wipePrev {
-  from {
-    clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
-  }
-  to {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-  }
+@keyframes pageFlip {
+  0% { transform: rotateY(0); }
+  50% { transform: rotateY(-10deg); }
+  100% { transform: rotateY(-180deg); }
 }
 
-.wipe-next {
-  animation: wipeNext 0.6s cubic-bezier(0.65, 0, 0.35, 1);
-}
-
-.wipe-prev {
-  animation: wipePrev 0.6s cubic-bezier(0.65, 0, 0.35, 1);
-}
-
-/* ===== LOADING ===== */
-.loading {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: var(--bg);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 2000;
-  transition: opacity 0.5s;
-}
-
-.loading.hidden {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.loader {
-  width: 60px;
-  height: 60px;
-  border: 5px solid var(--accent-light);
-  border-top: 5px solid var(--accent);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 20px;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* ===== EXPORT PREVIEW ===== */
-.export-preview {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.9);
-  z-index: 2000;
-  display: none;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-}
-
-.preview-content {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  max-width: 90%;
-  max-height: 90%;
-  overflow: auto;
-}
-
-.preview-image {
-  max-width: 100%;
-  max-height: 70vh;
-  border-radius: 5px;
-}
-
-/* ===== NOTIFICATION ===== */
-.notification {
-  position: fixed;
-  top: 20px;
+/* ===== PROGRESS BAR ===== */
+.flip-progress {
+  position: absolute;
+  bottom: -10px;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--accent);
-  color: white;
-  padding: 15px 30px;
-  border-radius: 30px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-  z-index: 2000;
-  display: none;
-  animation: slideDown 0.3s ease-out;
+  width: 80%;
+  height: 4px;
+  background: rgba(196, 154, 132, 0.2);
+  border-radius: 2px;
+  overflow: hidden;
 }
 
-@keyframes slideDown {
-  from {
-    top: -50px;
-    opacity: 0;
-  }
-  to {
-    top: 20px;
-    opacity: 1;
-  }
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  width: 0%;
+  transition: width 0.5s;
 }
 </style>
 </head>
 <body>
 
-<!-- LOADING SCREEN -->
-<div class="loading" id="loading">
-  <div class="loader"></div>
-  <p>Loading celebration...</p>
-</div>
-
-<!-- MODAL FOR IMAGE UPLOAD -->
-<div class="modal" id="imageModal">
-  <div class="modal-content">
-    <h3>Add Baby Photo</h3>
-    <p>Upload a photo to personalize this invitation</p>
-    
-    <div class="upload-area" id="uploadArea">
-      <i class="fas fa-cloud-upload-alt"></i>
-      <p>Click to upload or drag & drop</p>
-      <p style="font-size: 0.9rem; color: var(--text-light);">JPG, PNG or GIF (Max 5MB)</p>
-    </div>
-    
-    <input type="file" id="imageInput" accept="image/*" style="display: none;">
-    
-    <div class="image-preview" id="imagePreview"></div>
-    
-    <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
-      <button class="control-btn" onclick="useDefaultImage()">
-        <i class="fas fa-baby"></i> Use Default
-      </button>
-      <button class="control-btn" onclick="closeModal()" style="background: var(--text-light);">
-        <i class="fas fa-times"></i> Cancel
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- EXPORT PREVIEW -->
-<div class="export-preview" id="exportPreview">
-  <div class="preview-content">
-    <h3 style="color: var(--accent); margin-bottom: 15px;">Save Invitation</h3>
-    <img id="previewImage" class="preview-image" alt="Invitation Preview">
-    <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
-      <button class="control-btn" onclick="downloadImage()">
-        <i class="fas fa-download"></i> Download
-      </button>
-      <button class="control-btn" onclick="closePreview()" style="background: var(--text-light);">
-        <i class="fas fa-times"></i> Close
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- NOTIFICATION -->
-<div class="notification" id="notification"></div>
-
 <!-- DECOR -->
 <div class="decor-container" id="decor"></div>
 
-<!-- TOP CONTROLS -->
-<div class="top-controls">
-  <button class="icon-btn" onclick="showImageModal()" title="Change Photo">
-    <i class="fas fa-camera"></i>
-  </button>
-  <button class="icon-btn" onclick="toggleMusic()" id="musicToggle" title="Music">
-    <i class="fas fa-music"></i>
-  </button>
-  <button class="icon-btn" onclick="exportToImage()" title="Save Invitation">
-    <i class="fas fa-download"></i>
-  </button>
-</div>
+<!-- MUSIC TOGGLE -->
+<button class="music-toggle" id="musicToggle" onclick="toggleMusic()">
+  <i class="fas fa-music"></i>
+</button>
+<audio id="bgm" loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_97e9d37c58.mp3" type="audio/mpeg">
+</audio>
 
 <!-- FLIPBOOK -->
 <div class="book-container">
@@ -769,7 +537,7 @@ body {
     <!-- HARD COVER -->
     <div class="hard-cover" id="hardCover">
       <div class="cover-baby">
-        <img id="coverImage" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&h=400&q=80" alt="Baby Eliana">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&h=400&q=80" alt="Baby Eliana">
       </div>
       <h1>Eliana Belle Marquez</h1>
       <h2>Christening Celebration</h2>
@@ -783,10 +551,10 @@ body {
     <div class="pages-container" id="pagesContainer">
       
       <!-- PAGE 1 -->
-      <div class="page active" id="page1">
+      <div class="page" id="page1">
         <div class="page-content">
           <div class="baby">
-            <img id="page1Image" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&h=400&q=80" alt="Baby Eliana">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&h=400&q=80" alt="Baby Eliana">
           </div>
           <div class="rainbow"></div>
           <h1>Hope to see you there!</h1>
@@ -794,6 +562,7 @@ body {
           <p>Lots of love,<br><strong>Eliana Belle Marquez</strong> & Family</p>
           <div class="page-number">1</div>
         </div>
+        <div class="flip-progress"><div class="progress-fill"></div></div>
       </div>
       
       <!-- PAGE 2 -->
@@ -820,6 +589,7 @@ body {
           <p style="margin-top: 20px; font-size: 0.9rem;">Your cooperation ensures a safe celebration for everyone</p>
           <div class="page-number">2</div>
         </div>
+        <div class="flip-progress"><div class="progress-fill"></div></div>
       </div>
       
       <!-- PAGE 3 -->
@@ -851,6 +621,7 @@ body {
           </div>
           <div class="page-number">3</div>
         </div>
+        <div class="flip-progress"><div class="progress-fill"></div></div>
       </div>
       
       <!-- PAGE 4 -->
@@ -878,15 +649,16 @@ body {
           <p style="margin-top: 15px; font-style: italic;">We can't wait to celebrate with you!</p>
           <div class="page-number">4</div>
         </div>
+        <div class="flip-progress"><div class="progress-fill"></div></div>
       </div>
       
     </div>
   </div>
 </div>
 
-<!-- BOTTOM CONTROLS -->
+<!-- CONTROLS -->
 <div class="controls">
-  <button class="control-btn" id="prevBtn" onclick="prevPage()" disabled>
+  <button id="prevBtn" onclick="prevPage()" disabled>
     <i class="fas fa-arrow-left"></i> Prev
   </button>
   
@@ -894,7 +666,7 @@ body {
     <span id="currentPage">1</span> / <span id="totalPages">4</span>
   </div>
   
-  <button class="control-btn" id="nextBtn" onclick="nextPage()">
+  <button id="nextBtn" onclick="nextPage()">
     Next <i class="fas fa-arrow-right"></i>
   </button>
 </div>
@@ -902,20 +674,6 @@ body {
 <!-- CONFETTI CONTAINER -->
 <div class="confetti-container" id="confettiContainer"></div>
 
-<!-- AUDIO ELEMENTS -->
-<audio id="pageFlipSound" preload="auto">
-  <source src="https://assets.mixkit.co/sfx/preview/mixkit-book-page-flip-302.mp3" type="audio/mpeg">
-</audio>
-
-<audio id="celebrationSound" preload="auto">
-  <source src="https://assets.mixkit.co/sfx/preview/mixkit-children-celebration-whistle-680.mp3" type="audio/mpeg">
-</audio>
-
-<audio id="bgm" loop preload="auto">
-  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_97e9d37c58.mp3" type="audio/mpeg">
-</audio>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
 // DOM Elements
 const hardCover = document.getElementById('hardCover');
@@ -926,56 +684,22 @@ const nextBtn = document.getElementById('nextBtn');
 const currentPageEl = document.getElementById('currentPage');
 const totalPagesEl = document.getElementById('totalPages');
 const musicToggle = document.getElementById('musicToggle');
-const loadingScreen = document.getElementById('loading');
-const imageModal = document.getElementById('imageModal');
-const uploadArea = document.getElementById('uploadArea');
-const imageInput = document.getElementById('imageInput');
-const imagePreview = document.getElementById('imagePreview');
-const coverImage = document.getElementById('coverImage');
-const page1Image = document.getElementById('page1Image');
-const exportPreview = document.getElementById('exportPreview');
-const previewImage = document.getElementById('previewImage');
-const notification = document.getElementById('notification');
-
-// Audio Elements
 const bgm = document.getElementById('bgm');
-const pageFlipSound = document.getElementById('pageFlipSound');
-const celebrationSound = document.getElementById('celebrationSound');
+const confettiContainer = document.getElementById('confettiContainer');
+const decorContainer = document.getElementById('decor');
 
 // State
 let currentPage = 0;
 let isBookOpen = false;
 let isMusicPlaying = false;
-let uploadedImage = null;
 const totalPages = pages.length;
 
 // Initialize
 totalPagesEl.textContent = totalPages;
 updateControls();
 
-// Show loading screen initially
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    loadingScreen.classList.add('hidden');
-  }, 1500);
-  
-  // Preload audio
-  preloadAudio();
-  createDecorations();
-});
-
-// Preload audio files
-function preloadAudio() {
-  // Audio will be loaded when needed
-  bgm.volume = 0.5;
-  pageFlipSound.volume = 0.3;
-  celebrationSound.volume = 0.4;
-}
-
 // Create decorative elements
 function createDecorations() {
-  const decorContainer = document.getElementById('decor');
-  
   // Create clouds
   for (let i = 0; i < 5; i++) {
     const cloud = document.createElement('div');
@@ -1005,73 +729,60 @@ function createDecorations() {
 // Open book function
 function openBook() {
   if (!isBookOpen) {
-    hardCover.style.display = 'none';
-    pagesContainer.style.display = 'block';
+    hardCover.classList.add('open');
+    pagesContainer.style.zIndex = '11';
     isBookOpen = true;
-    
-    // Play celebration sound
-    celebrationSound.currentTime = 0;
-    celebrationSound.play().catch(e => console.log("Audio play failed:", e));
     
     // Trigger confetti
     createConfetti(50);
     
     // Update page indicator
     updatePageIndicator();
-    
-    showNotification('Welcome to Eliana\'s Christening Invitation!');
   }
 }
 
-// Page navigation with wipe animation
+// Page navigation
 function nextPage() {
   if (currentPage < totalPages - 1) {
-    // Play page flip sound
-    pageFlipSound.currentTime = 0;
-    pageFlipSound.play().catch(e => console.log("Audio play failed:", e));
-    
-    // Add wipe animation
-    pages[currentPage].classList.add('wipe-next');
+    // Add flip animation to current page
+    pages[currentPage].classList.add('flip');
     
     // Update page after animation
     setTimeout(() => {
-      pages[currentPage].classList.remove('active', 'prev', 'wipe-next');
+      pages[currentPage].style.transform = 'rotateY(-180deg)';
+      pages[currentPage].classList.remove('flip');
       currentPage++;
-      pages[currentPage].classList.add('active');
       
-      // Update controls and indicator
+      // Update controls and progress
       updateControls();
+      updateProgress();
       updatePageIndicator();
       
       // Trigger confetti on last page
       if (currentPage === totalPages - 1) {
         createConfetti(30);
-        celebrationSound.currentTime = 0;
-        celebrationSound.play().catch(e => console.log("Audio play failed:", e));
       }
-    }, 600);
+    }, 400);
   }
 }
 
 function prevPage() {
   if (currentPage > 0) {
-    // Play page flip sound
-    pageFlipSound.currentTime = 0;
-    pageFlipSound.play().catch(e => console.log("Audio play failed:", e));
+    currentPage--;
     
-    // Add wipe animation
-    pages[currentPage].classList.add('wipe-prev');
+    // Add flip animation to previous page
+    pages[currentPage].classList.add('flip');
     
     // Update page after animation
     setTimeout(() => {
-      pages[currentPage].classList.remove('active', 'prev', 'wipe-prev');
-      currentPage--;
-      pages[currentPage].classList.add('active');
+      pages[currentPage].style.transform = 'rotateY(0deg)';
+      pages[currentPage].classList.remove('flip');
       
-      // Update controls and indicator
+      // Update controls and progress
       updateControls();
+      updateProgress();
       updatePageIndicator();
-    }, 600);
+    }, 400);
   }
 }
 
@@ -1088,6 +799,14 @@ function updateControls() {
   }
 }
 
+// Update progress bar
+function updateProgress() {
+  const progress = ((currentPage + 1) / totalPages) * 100;
+  document.querySelectorAll('.progress-fill').forEach(fill => {
+    fill.style.width = `${progress}%`;
+  });
+}
+
 // Update page indicator
 function updatePageIndicator() {
   currentPageEl.textContent = currentPage + 1;
@@ -1099,33 +818,16 @@ function toggleMusic() {
     bgm.pause();
     musicToggle.innerHTML = '<i class="fas fa-music"></i>';
     musicToggle.style.background = 'var(--accent)';
-    musicToggle.title = 'Play Music';
   } else {
-    bgm.play().catch(e => {
-      console.log("Audio play failed:", e);
-      showNotification('Click anywhere to enable audio');
-      // Enable audio on user interaction
-      document.addEventListener('click', enableAudioOnce, { once: true });
-    });
+    bgm.play().catch(e => console.log("Audio play failed:", e));
     musicToggle.innerHTML = '<i class="fas fa-volume-up"></i>';
     musicToggle.style.background = 'var(--text)';
-    musicToggle.title = 'Pause Music';
   }
   isMusicPlaying = !isMusicPlaying;
 }
 
-// Enable audio on first user interaction
-function enableAudioOnce() {
-  bgm.play().catch(e => console.log("Audio play failed after interaction:", e));
-  isMusicPlaying = true;
-  musicToggle.innerHTML = '<i class="fas fa-volume-up"></i>';
-  musicToggle.style.background = 'var(--text)';
-}
-
 // Create confetti
 function createConfetti(count) {
-  const confettiContainer = document.getElementById('confettiContainer');
-  
   for (let i = 0; i < count; i++) {
     const confetti = document.createElement('div');
     confetti.className = 'confetti';
@@ -1148,161 +850,6 @@ function createConfetti(count) {
       confetti.remove();
     }, 3000);
   }
-}
-
-// Image upload functionality
-function showImageModal() {
-  imageModal.style.display = 'flex';
-}
-
-function closeModal() {
-  imageModal.style.display = 'none';
-  imagePreview.style.display = 'none';
-  imagePreview.innerHTML = '';
-}
-
-function useDefaultImage() {
-  const defaultImage = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&h=400&q=80';
-  coverImage.src = defaultImage;
-  page1Image.src = defaultImage;
-  uploadedImage = null;
-  closeModal();
-  showNotification('Default image restored');
-}
-
-// Setup upload area
-uploadArea.addEventListener('click', () => {
-  imageInput.click();
-});
-
-uploadArea.addEventListener('dragover', (e) => {
-  e.preventDefault();
-  uploadArea.style.background = 'rgba(196, 154, 132, 0.1)';
-  uploadArea.style.borderColor = 'var(--accent)';
-});
-
-uploadArea.addEventListener('dragleave', () => {
-  uploadArea.style.background = '';
-  uploadArea.style.borderColor = 'var(--accent-light)';
-});
-
-uploadArea.addEventListener('drop', (e) => {
-  e.preventDefault();
-  uploadArea.style.background = '';
-  uploadArea.style.borderColor = 'var(--accent-light)';
-  
-  if (e.dataTransfer.files.length) {
-    handleImageUpload(e.dataTransfer.files[0]);
-  }
-});
-
-imageInput.addEventListener('change', (e) => {
-  if (e.target.files.length) {
-    handleImageUpload(e.target.files[0]);
-  }
-});
-
-function handleImageUpload(file) {
-  // Check file size (max 5MB)
-  if (file.size > 5 * 1024 * 1024) {
-    showNotification('File is too large. Max 5MB allowed.');
-    return;
-  }
-  
-  // Check file type
-  if (!file.type.match('image.*')) {
-    showNotification('Please select an image file (JPG, PNG, GIF)');
-    return;
-  }
-  
-  const reader = new FileReader();
-  
-  reader.onload = function(e) {
-    // Create image preview
-    const img = new Image();
-    img.onload = function() {
-      // Create canvas to crop to square
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      
-      // Get square dimensions
-      const size = Math.min(img.width, img.height);
-      canvas.width = 400;
-      canvas.height = 400;
-      
-      // Draw cropped image
-      ctx.drawImage(
-        img,
-        (img.width - size) / 2,
-        (img.height - size) / 2,
-        size,
-        size,
-        0,
-        0,
-        400,
-        400
-      );
-      
-      const croppedImageUrl = canvas.toDataURL('image/jpeg', 0.9);
-      
-      // Update preview
-      imagePreview.innerHTML = `<img src="${croppedImageUrl}" style="width:100%;height:100%;object-fit:cover;">`;
-      imagePreview.style.display = 'block';
-      
-      // Update actual images
-      coverImage.src = croppedImageUrl;
-      page1Image.src = croppedImageUrl;
-      uploadedImage = croppedImageUrl;
-      
-      showNotification('Photo updated successfully!');
-    };
-    img.src = e.target.result;
-  };
-  
-  reader.readAsDataURL(file);
-}
-
-// Export to image functionality
-function exportToImage() {
-  // Show loading
-  loadingScreen.classList.remove('hidden');
-  
-  // Get the current active page or the whole book
-  const exportElement = pages[currentPage];
-  
-  // Use html2canvas to capture the page
-  html2canvas(exportElement, {
-    backgroundColor: '#fffaf7',
-    scale: 2, // Higher quality
-    useCORS: true, // Allow cross-origin images
-    logging: false // Disable logging
-  }).then(canvas => {
-    // Convert canvas to image
-    const imageData = canvas.toDataURL('image/png');
-    
-    // Show in preview
-    previewImage.src = imageData;
-    exportPreview.style.display = 'flex';
-    
-    // Hide loading
-    loadingScreen.classList.add('hidden');
-  }).catch(error => {
-    console.error('Error capturing image:', error);
-    loadingScreen.classList.add('hidden');
-    showNotification('Error saving image. Please try again.');
-  });
-}
-
-function closePreview() {
-  exportPreview.style.display = 'none';
-}
-
-function downloadImage() {
-  const link = document.createElement('a');
-  link.download = `eliana-christening-page-${currentPage + 1}.png`;
-  link.href = previewImage.src;
-  link.click();
-  showNotification('Image downloaded successfully!');
 }
 
 // Add touch/swipe support for mobile
@@ -1350,29 +897,18 @@ document.addEventListener('keydown', e => {
   if (e.key === 'm' || e.key === 'M') {
     toggleMusic();
   }
-  
-  if (e.key === 'Escape') {
-    closeModal();
-    closePreview();
-  }
 });
 
-// Show notification
-function showNotification(message) {
-  notification.textContent = message;
-  notification.style.display = 'block';
-  
-  setTimeout(() => {
-    notification.style.display = 'none';
-  }, 3000);
-}
+// Initialize
+createDecorations();
+updateProgress();
 
 // Add click handler for pages (for flipping on click)
 pages.forEach((page, index) => {
-  page.addEventListener('click', (e) => {
+  page.addEventListener('click', () => {
     // Only allow flipping by clicking on the right side of the page
     const rect = page.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
+    const clickX = event.clientX - rect.left;
     const pageWidth = rect.width;
     
     if (clickX > pageWidth * 0.7 && index === currentPage && currentPage < totalPages - 1) {
@@ -1383,22 +919,24 @@ pages.forEach((page, index) => {
   });
 });
 
-// Initialize background music with user interaction
-document.addEventListener('click', function initAudio() {
-  // Try to play music on first click
-  if (!isMusicPlaying) {
-    bgm.play().then(() => {
-      isMusicPlaying = true;
-      musicToggle.innerHTML = '<i class="fas fa-volume-up"></i>';
-      musicToggle.style.background = 'var(--text)';
-    }).catch(e => {
-      console.log("Audio autoplay blocked");
+// Add hover effect for next/prev areas on desktop
+if (window.innerWidth > 768) {
+  pages.forEach((page, index) => {
+    page.addEventListener('mousemove', (e) => {
+      const rect = page.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const width = rect.width;
+      
+      if (index === currentPage && x > width * 0.8 && currentPage < totalPages - 1) {
+        page.style.cursor = 'pointer';
+      } else if (index === currentPage - 1 && x < width * 0.2 && currentPage > 0) {
+        page.style.cursor = 'pointer';
+      } else {
+        page.style.cursor = 'default';
+      }
     });
-  }
-  
-  // Remove this listener after first click
-  document.removeEventListener('click', initAudio);
-}, { once: true });
+  });
+}
 </script>
 </body>
 </html>
